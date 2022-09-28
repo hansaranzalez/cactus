@@ -1,0 +1,161 @@
+<script setup lang="ts">
+import { computed, onUnmounted, ref, watch } from "vue";
+import Product from "../../entities/Product";
+import Store from "../../store/appStore";
+import addProductData from "../../assets/data/addProduct.data";
+import ProductsStore from "../../store/productsStore";
+import updateOrCreateProduct from "../../actions/products/updateOrCreateProduct";
+import deleteProduct from "../../actions/products/deleteProduct";
+import getProductsList from "../../actions/products/getProductsList";
+import { productFormValidationRules } from "../../assets/formRules";
+import { UploadProps } from "element-plus";
+import deleteProductImage from "../../actions/products/deleteProductImage";
+
+const productsForm = ref();
+const product = computed<Product>({
+  get: (): Product => ProductsStore.getProductFormPayload(),
+  set: (product: Product): void => {
+    ProductsStore.setProductFormPayload(product);
+  },
+});
+const useModel = ref(false);
+const isEditing = computed(() => ProductsStore.getIsEditing());
+const confirmDelete = ref(false);
+const dialogVisible = ref(false);
+const dialogImageUrl = ref('');
+const uploader = ref();
+
+const uploadImageUrl = computed(() =>
+  `http://localhost:3000/v1/products/${
+    ProductsStore.getProductFormPayload().id
+  }/upload`
+);
+
+watch(
+  () => useModel.value,
+  (current, prev) => {
+    if (current) {
+      product.value = addProductData;
+      return;
+    }
+    product.value = new Product();
+  }
+);
+onUnmounted(() => {
+  product.value = new Product();
+  ProductsStore.setIsEditing(false);
+});
+
+const createOrUpdateProduct = async (): Promise<void> => {
+  productsForm.value.validate(async (valid: boolean) => {
+    if (!valid) return;
+    if (isEditing.value) {
+      await updateOrCreateProduct(product.value, product.value.id as number);
+      await getProductsList();
+      return;
+    }
+    await updateOrCreateProduct(product.value);
+    await uploader.value.submit();
+    Store.setModalVisible(false);
+    await getProductsList();
+  });
+};
+const resetForm = (): void => {
+  Store.setModalVisible(false);
+  product.value = new Product();
+};
+const handleRemove: UploadProps["onRemove"] = async (uploadFile: any, uploadFiles): Promise<void> => {
+  if(product.value.id && uploadFile.id) {
+    await deleteProductImage(product.value.id, uploadFile.id);
+    await getProductsList();
+  }
+};
+const handleSuccess = async (response: any, file: any, fileList: any) => {
+  console.log(response, file, fileList);
+  await getProductsList();
+};
+const handlePictureCardPreview: UploadProps["onPreview"] = (uploadFile) => {
+  dialogImageUrl.value = uploadFile.url!;
+  dialogVisible.value = true;
+};
+</script>
+
+<template>
+  <transition
+    enter-active-class="animate__animated animate__fadeInDown"
+    leave-active-class="animate__animated animate__fadeOutUp"
+  >
+    <div
+      v-if="confirmDelete"
+      @click="deleteProduct(product)"
+      class="bg-red-500 absolute text-white cursor-pointer text-center h-12 font-semibold w-full left-0 right-0 flex items-center justify-center top-0"
+    >
+      <p class="text-center">DELETE</p>
+    </div>
+  </transition>
+
+  <div class="p-5">
+    <div>
+      <span>Use model</span> | <input type="checkbox" v-model="useModel" />
+    </div>
+    <el-upload
+      ref="uploader"
+      :action="uploadImageUrl"
+      list-type="picture-card"
+      :auto-upload="ProductsStore.getIsEditing()"
+      multiple
+      :on-remove="handleRemove"
+      :on-success="handleSuccess"
+      :on-preview="handlePictureCardPreview"
+      :file-list="ProductsStore.getProductFormPayload().images"
+    >
+      <el-icon>
+        <Plus />
+      </el-icon>
+    </el-upload>
+
+    <el-dialog v-model="dialogVisible">
+      <img w-full :src="dialogImageUrl" alt="Preview Image" />
+    </el-dialog>
+    <h1 class="title-1">
+      {{ ProductsStore.getIsEditing() ? "Update" : "Create" }}
+    </h1>
+    <el-form
+      :model="product"
+      ref="productsForm"
+      :rules="productFormValidationRules"
+      label-width="80px"
+      :inline="false"
+      size="normal"
+    >
+      <div class="flex flex-col items-center justify-center space-y-3">
+        <el-form-item prop="name" label="Name">
+          <el-input v-model="product.name"></el-input>
+        </el-form-item>
+        <el-form-item prop="description" label="Description">
+          <el-input type="textarea" v-model="product.description"></el-input>
+        </el-form-item>
+        <el-form-item prop="price" label="Price">
+          <el-input v-model="product.price"></el-input>
+        </el-form-item>
+        <el-form-item prop="in_stock" label="In stock">
+          <el-input-number v-model="product.in_stock" />
+        </el-form-item>
+        <div>
+          <el-button type="text" @click="resetForm">Cancel</el-button>
+          <el-button
+            v-if="isEditing"
+            type="danger"
+            @click="confirmDelete = true"
+            >Delete</el-button
+          >
+          <el-button type="primary" @click="createOrUpdateProduct">{{
+            isEditing ? "Update" : "Create"
+          }}</el-button>
+        </div>
+      </div>
+    </el-form>
+  </div>
+</template>
+
+<style scoped></style>
