@@ -1,3 +1,4 @@
+import { ElMessage } from "element-plus";
 import Product from "../../entities/Product";
 import Http from "../../Http";
 import Store from "../../store/appStore";
@@ -16,11 +17,7 @@ export default async function updateOrCreateProduct(product: Product, id?: numbe
                 }
             );
             if (response.status !== 200) throw new Error(response.message);
-            Store.setToast({
-                message: response.message,
-                type: "success-toast",
-                visible: true,
-            });
+            ElMessage.success(response.message);
             return;
         }
         
@@ -34,16 +31,8 @@ export default async function updateOrCreateProduct(product: Product, id?: numbe
         if (response.status !== 200) throw new Error(response.message);
         if (!response.data.id) throw new Error("Product procesing error");
         ProductsStore.setProductFormPayload(response.data);
-        Store.setToast({
-            message: response.message,
-            type: "success-toast",
-            visible: true,
-        });
+        ElMessage.success(response.message);
     } catch (error) {
-        Store.setToast({
-            message: (error as any).message,
-            type: "danger-toast",
-            visible: true,
-        });
+        ElMessage.error((error as any).message);
     }
 }

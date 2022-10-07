@@ -2,9 +2,7 @@
 import { computed, onMounted, ref } from "vue";
 import getRolesList from "../../actions/roles/getRolesList";
 import Role from "../../entities/Role";
-import Store from "../../store/appStore";
 import RolesStore from "../../store/rolesStore";
-import RolesForm from "./rolesForm.vue";
 
 const tableColumns = ref([
 {
@@ -30,10 +28,7 @@ const tableColumns = ref([
 const editUser = (role: Role): void => {
   RolesStore.setRole(JSON.parse(JSON.stringify(role)));
   RolesStore.setIsEditing(true);
-  Store.setModal({
-    visible: true,
-    component: RolesForm,
-  });
+  RolesStore.showRolesForm();
 };
 
 const setCurrentPage = async (current: number) => {
@@ -86,12 +81,7 @@ onMounted(async () => await getRolesList());
               <el-button
                 type="primary"
                 size="default"
-                @click="
-                  Store.setModal({
-                    visible: true,
-                    component: RolesForm,
-                  })
-                "
+                @click="RolesStore.showRolesForm()"
                 >Create</el-button
               >
             </div>

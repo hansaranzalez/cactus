@@ -1,3 +1,4 @@
+import { ElMessage } from "element-plus";
 import Http from "../../Http";
 import Store from "../../store/appStore";
 import RolesStore from "../../store/rolesStore";
@@ -12,11 +13,7 @@ export default async function getRolesList(): Promise<any> {
         RolesStore.setRolesList(response.items);
         RolesStore.setPaginationMeta(response.meta);
         RolesStore.setRolesListLoading(false)
-    } catch (error) {
-        Store().setToast({
-            message: (error as any).message,
-            type: "danger-toast",
-            visible: true,
-        });
+    } catch (error: any) {
+        ElMessage.error(error.message);
     }
 }

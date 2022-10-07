@@ -4,6 +4,7 @@ import Role from "../entities/Role";
 
 interface RolesStateContract {
     roles: Role[];
+    rolesFormVisible: boolean;
     rolesListLoading: boolean;
     isEditing: boolean;
     role: Role,
@@ -13,6 +14,7 @@ interface RolesStateContract {
 
 const state = reactive<RolesStateContract>({
     roles: [],
+    rolesFormVisible: false,
     rolesListLoading: false,
     isEditing: false,
     role: new Role(),
@@ -27,6 +29,9 @@ const state = reactive<RolesStateContract>({
 });
 
 const RolesStore = () => ({
+    showRolesForm: () => { state.rolesFormVisible = true },
+    hideRolesForm: () => { state.rolesFormVisible = false },
+    rolesFormVisible: () => state.rolesFormVisible,
     getRolesListLoading: (): boolean => state.rolesListLoading,
     setRolesListLoading: (value: boolean): void => { state.rolesListLoading = value },
     setPaginationCurrentPage: (page: number): void => { state.paginationMeta.currentPage = page },

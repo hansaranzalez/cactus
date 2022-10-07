@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import productsList from "../../components/products/productsList.vue";
-import Modal from "../../components/core/modal.vue";
+import productForm from "../../components/products/productForm.vue";
 </script>
 <template>
   <productsList />
-  <Modal />
+  <productForm />
 </template>

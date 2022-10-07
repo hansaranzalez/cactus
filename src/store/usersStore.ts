@@ -7,6 +7,7 @@ import User from "../entities/User";
 
 interface UsersStoreStateContract {
     users: User[];
+    usersFormVisible: boolean;
     usersListLoading: boolean;
     isEditing: boolean;
     user: User,
@@ -16,6 +17,7 @@ interface UsersStoreStateContract {
 
 const state = reactive<UsersStoreStateContract>({
     users: [],
+    usersFormVisible: false,
     usersListLoading: false,
     isEditing: false,
     user: new User(),
@@ -30,6 +32,9 @@ const state = reactive<UsersStoreStateContract>({
 });
 
 const UsersStore = () => ({
+    showUsersForm: () => { state.usersFormVisible = true },
+    hideUsersForm: () => { state.usersFormVisible = false },
+    usersFormVisible: () => state.usersFormVisible,
     getCurrentUserAvatarUrl: () => {
         return state.user.avatar.url;
     },

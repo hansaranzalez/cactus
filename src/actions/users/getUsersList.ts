@@ -1,3 +1,4 @@
+import { ElMessage } from "element-plus";
 import Http from "../../Http";
 import Store from "../../store/appStore";
 import UsersStore from "../../store/usersStore";
@@ -12,10 +13,6 @@ export default async function getUsersList() {
         UsersStore.setPaginationMeta(response.meta);
         UsersStore.setUsersListLoading(false)
     } catch (error) {
-        Store.setToast({
-            message: (error as any).message,
-            type: "danger-toast",
-            visible: true,
-        });
+        ElMessage.error((error as any).message);
     }
 }

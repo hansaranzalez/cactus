@@ -1,3 +1,5 @@
+import Category from "./Category";
+
 interface ProductContract {
     id: number | null;
     name: string;
@@ -23,6 +25,7 @@ export default class Product implements ProductContract {
     public created_at: string;
     public updated_at: string;
     public images: ImagesContract[];
+    public category: Category;
 
     constructor(product?: Product) {
 
@@ -33,6 +36,7 @@ export default class Product implements ProductContract {
             this.price = product.price;
             this.in_stock = product.in_stock;
             this.images = product.images;
+            this.category = product.category;
             this.created_at = product.created_at;
             this.updated_at = product.updated_at;
         } else {
@@ -42,6 +46,7 @@ export default class Product implements ProductContract {
             this.price = null;
             this.in_stock = null;
             this.images = [];
+            this.category = new Category();
             this.created_at = "";
             this.updated_at = "";
         }
@@ -53,6 +58,7 @@ export default class Product implements ProductContract {
             price: this.price,
             in_stock: this.in_stock,
             images: this.images,
+            category: this.category,
             created_at: this.created_at,
             updated_at: this.updated_at,
         };

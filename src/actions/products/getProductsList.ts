@@ -1,3 +1,4 @@
+import { ElMessage } from "element-plus";
 import Http from "../../Http";
 import Store from "../../store/appStore";
 import ProductsStore from "../../store/productsStore";
@@ -12,12 +13,8 @@ export default async function getProductsList(): Promise<void> {
         ProductsStore.setProductsList(response.items);
         ProductsStore.setPaginationMeta(response.meta);
         ProductsStore.setProductsListLoading(false)
-    } catch (error) {
-        Store.setToast({
-            message: "Couldnt get Products list",
-            visible: true,
-            type: "danger-toast",
-        });
+    } catch (error: any) {
+        ElMessage.error(error.message);
         ProductsStore.setProductsListLoading(false)
     }
     

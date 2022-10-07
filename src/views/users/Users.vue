@@ -1,9 +1,9 @@
 <script setup lang="ts">
     import usersList from "../../components/users/usersList.vue";
-    import Modal from "../../components/core/modal.vue";
+    import userForm from "../../components/users/userForm.vue";
     </script>
     <template>
       <usersList />
-      <Modal />
+      <userForm />
     </template>
     

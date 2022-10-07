@@ -35,10 +35,7 @@ const tableColumns = ref([
 const editUser = (user: User): void => {
   UsersStore.setUser(JSON.parse(JSON.stringify(user)));
   UsersStore.setIsEditing(true);
-  Store.setModal({
-    visible: true,
-    component: UsersForm,
-  });
+  UsersStore.showUsersForm();
 };
 
 const setCurrentPage = async (current: number) => {
@@ -163,12 +160,7 @@ onMounted(async () => await getUsersList());
               <el-button
                 type="primary"
                 size="default"
-                @click="
-                  Store.setModal({
-                    visible: true,
-                    component: UsersForm,
-                  })
-                "
+                @click="UsersStore.showUsersForm()"
                 >Create</el-button
               >
             </div>

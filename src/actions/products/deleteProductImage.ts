@@ -1,3 +1,4 @@
+import { ElMessage } from "element-plus";
 import Http from "../../Http";
 import Store from "../../store/appStore";
 
@@ -5,16 +6,8 @@ export default async function deleteProductImage(productId: number, id: number):
     try {
         const response = await Http.del(`products/${productId}/upload/${id}`);
         if (response.status !== 200) throw new Error(response.message);
-        Store.setToast({
-            message: response.message,
-            visible: true,
-            type: "success-toast",
-        });
-    } catch (error) {
-        Store.setToast({
-            message: (error as any).message,
-            visible: true,
-            type: "danger-toast",
-        });
+        ElMessage.success(response.message);
+    } catch (error: any) {
+        ElMessage.error(error.message);
     }
 }

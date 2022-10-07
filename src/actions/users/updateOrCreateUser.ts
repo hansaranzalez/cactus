@@ -1,3 +1,4 @@
+import { ElMessage } from "element-plus";
 import User from "../../entities/User";
 import Http from "../../Http";
 import Store from "../../store/appStore";
@@ -15,11 +16,7 @@ export default async function updateOrCreateUser(user: User, id?: number): Promi
                 },
             );
             if (response.status !== 200) throw new Error(response.message);
-            Store.setToast({
-                message: response.message,
-                type: "success-toast",
-                visible: true,
-            });
+            ElMessage.success(response.message);
             return;
         }
         
@@ -33,16 +30,8 @@ export default async function updateOrCreateUser(user: User, id?: number): Promi
         if (response.status !== 200) throw new Error(response.message);
         if (!response.data.id) throw new Error("User procesing error");
         UsersStore.setUser(response.data);
-        Store.setToast({
-            message: response.message,
-            type: "success-toast",
-            visible: true,
-        });
+        ElMessage.success(response.message);
     } catch (error) {
-        Store.setToast({
-            message: (error as any).message,
-            type: "danger-toast",
-            visible: true,
-        });
+        ElMessage.error((error as any).message);
     }
 }

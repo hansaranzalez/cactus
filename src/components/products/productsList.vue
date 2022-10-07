@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
 import Product from "../../entities/Product";
-import Store from "../../store/appStore";
-import ProductsForm from "./productForm.vue";
 import ProductsStore from "../../store/productsStore";
 import getProductsList from "../../actions/products/getProductsList";
 
@@ -38,20 +36,20 @@ const tableColumns = ref([
     prop: "in_stock",
   },
 ]);
+
 const editProduct = (product: Product): void => {
   ProductsStore.setProductFormPayload(JSON.parse(JSON.stringify(product)));
   ProductsStore.setIsEditing(true);
-  Store.setModal({
-    visible: true,
-    component: ProductsForm,
-  });
+  ProductsStore.showProductsForm();
 };
 
+// pagination
 const setCurrentPage = async (current: number) => {
   ProductsStore.setPaginationCurrentPage(current);
   await getProductsList();
 };
 
+// search query
 const search = computed({
   get: (): string => ProductsStore.getSearchQuery(),
   set: (value: string): void => {
@@ -103,12 +101,7 @@ onMounted(async () => await getProductsList());
               <el-button
                 type="primary"
                 size="default"
-                @click="
-                  Store.setModal({
-                    visible: true,
-                    component: ProductsForm,
-                  })
-                "
+                @click="ProductsStore.showProductsForm()"
                 >Create</el-button
               >
             </div>

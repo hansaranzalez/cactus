@@ -8,6 +8,15 @@ import updateOrCreateRole from "../../actions/roles/updateOrCreateRole";
 import deleteRole from "../../actions/roles/deleteRole";
 import { roleFormValidationRules } from "../../assets/formRules";
 
+
+const dialogVisible = computed({
+  get: (): boolean => RolesStore.rolesFormVisible(),
+  set: (value: boolean): void => {
+    if (value) RolesStore.showRolesForm();
+    else RolesStore.hideRolesForm();
+  },
+});
+
 const roleForm = ref();
 const role = computed<Role>({
   get: (): Role => RolesStore.getRole(),
@@ -32,18 +41,19 @@ const createOrUpdateRoles = async (): Promise<void> => {
       return;
     }
     await updateOrCreateRole(role.value);
-    Store().setModalVisible(false);
+    RolesStore.hideRolesForm();
     await getRolesList();
   });
 };
 const resetForm = (): void => {
-  Store().setModalVisible(false);
+  RolesStore.hideRolesForm();
   role.value = new Role();
 };
 </script>
 
 <template>
-  <transition
+  <el-dialog title="" v-model="dialogVisible" width="30%" @close="resetForm">
+    <transition
     enter-active-class="animate__animated animate__fadeInDown"
     leave-active-class="animate__animated animate__fadeOutUp"
   >
@@ -91,8 +101,10 @@ const resetForm = (): void => {
         >
           <el-input v-model="role.updated_at" />
         </el-form-item>
-        <div>
-          <el-button type="text" @click="resetForm">Cancel</el-button>
+      </div>
+
+      <span slot="footer">
+        <el-button type="text" @click="resetForm">Cancel</el-button>
           <el-button
             v-if="isEditing"
             type="danger"
@@ -102,8 +114,10 @@ const resetForm = (): void => {
           <el-button type="primary" @click="createOrUpdateRoles">{{
             isEditing ? "Update" : "Create"
           }}</el-button>
-        </div>
-      </div>
+      </span>
     </el-form>
   </div>
+
+</el-dialog>
+  
 </template>

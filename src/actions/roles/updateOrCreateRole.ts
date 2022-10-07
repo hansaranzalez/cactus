@@ -1,7 +1,7 @@
 import Http from "../../Http";
-import Store from "../../store/appStore";
 import RolesStore from "../../store/rolesStore";
 import Role from "../../entities/Role";
+import { ElMessage } from "element-plus";
 
 export default async function updateOrCreateRole(role: Role, id?: number): Promise<any> {
     try {
@@ -14,11 +14,7 @@ export default async function updateOrCreateRole(role: Role, id?: number): Promi
                 },
             );
             if (response.status !== 200) throw new Error(response.message);
-            Store().setToast({
-                message: response.message,
-                type: "success-toast",
-                visible: true,
-            });
+            ElMessage.success(response.message);
             return;
         }
         
@@ -30,16 +26,8 @@ export default async function updateOrCreateRole(role: Role, id?: number): Promi
         if (response.status !== 200) throw new Error(response.message);
         if (!response.data.id) throw new Error("Role procesing error");
         RolesStore.setRole(response.data);
-        Store().setToast({
-            message: response.message,
-            type: "success-toast",
-            visible: true,
-        });
+        ElMessage.success(response.message);
     } catch (error) {
-        Store().setToast({
-            message: (error as any).message,
-            type: "danger-toast",
-            visible: true,
-        });
+        ElMessage.error((error as any).message);
     }
 }
