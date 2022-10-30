@@ -1,5 +1,5 @@
 import { ElMessage } from "element-plus";
-import User from "../../entities/User";
+import User from "../../entities/Client";
 import Http from "../../Http";
 import Store from "../../store/appStore";
 import UsersStore from "../../store/usersStore";

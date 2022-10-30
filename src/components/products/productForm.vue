@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onUnmounted, ref, watch } from "vue";
+import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import Product from "../../entities/Product";
 import addProductData from "../../assets/data/addProduct.data";
 import ProductsStore from "../../store/productsStore";
@@ -19,6 +19,7 @@ const dialogVisible = computed({
     else ProductsStore.hideProductsForm();
   },
 });
+
 const pictureDialogVisible = ref(false);
 const productsForm = ref();
 const product = computed<Product>({
@@ -27,7 +28,7 @@ const product = computed<Product>({
     ProductsStore.setProductFormPayload(product);
   },
 });
-const isEditing = computed(() => ProductsStore.getIsEditing());
+const isEditing = computed(() => ProductsStore.productsFormEdit());
 const confirmDelete = ref(false);
 const dialogImageUrl = ref("");
 const uploader = ref();
@@ -42,7 +43,7 @@ const uploadImageUrl = computed(
 
 onUnmounted(async () => {
   product.value = new Product();
-  ProductsStore.setIsEditing(false);
+  ProductsStore.setProductsFormEdit(false);
 });
 
 const createOrUpdateProduct = async (): Promise<void> => {
@@ -61,7 +62,7 @@ const createOrUpdateProduct = async (): Promise<void> => {
 
 const resetForm = (): void => {
   product.value = new Product();
-  ProductsStore.setIsEditing(false);
+  ProductsStore.setProductsFormEdit(false);
   productsForm.value.resetFields();
   ProductsStore.hideProductsForm();
 };
@@ -82,6 +83,8 @@ const handlePictureCardPreview: UploadProps["onPreview"] = (uploadFile) => {
   dialogImageUrl.value = uploadFile.url!;
   pictureDialogVisible.value = true;
 };
+
+onMounted(async () => await getCategoriesList());
 </script>
 
 <template>
@@ -104,7 +107,7 @@ const handlePictureCardPreview: UploadProps["onPreview"] = (uploadFile) => {
         ref="uploader"
         :action="uploadImageUrl"
         list-type="picture-card"
-        :auto-upload="ProductsStore.getIsEditing()"
+        :auto-upload="ProductsStore.productsFormEdit()"
         multiple
         :on-remove="handleRemove"
         :on-success="handleSuccess"
@@ -120,7 +123,7 @@ const handlePictureCardPreview: UploadProps["onPreview"] = (uploadFile) => {
         <img w-full :src="dialogImageUrl" alt="Preview Image" />
       </el-dialog>
       <h1 class="title-1">
-        {{ ProductsStore.getIsEditing() ? "Update" : "Create" }}
+        {{ ProductsStore.productsFormEdit() ? "Update" : "Create" }}
       </h1>
       <el-form
         :model="product"
@@ -147,15 +150,15 @@ const handlePictureCardPreview: UploadProps["onPreview"] = (uploadFile) => {
             <el-select
               :loading="!ProductsStore.areCategoriesLoaded"
               v-model="product.category"
-              value-key=""
+              value-key="id"
               placeholder="Por favor seleccione una categoria"
               clearable
               filterable
               @change=""
             >
               <el-option
-                v-for="category in ProductsStore.getCategoriesList()"
-                :key="category.id"
+                v-for="category, index in ProductsStore.getCategoriesList()"
+                :key="index"
                 :label="category.name"
                 :value="category"
               >

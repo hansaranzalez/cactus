@@ -1,6 +1,17 @@
 import { FormRules } from 'element-plus';
 import { reactive } from 'vue';
 
+export const categoriesFormValidationRules = reactive<FormRules>({
+  name: [
+    { required: true, message: 'Please input category name', trigger: 'blur' },
+    { min: 3, max: 255, message: 'Length should be 3 to 255', trigger: 'blur' },
+  ],
+  description: [
+    { required: true, message: 'Please input category description', trigger: 'blur' },
+    { min: 3, max: 255, message: 'Length should be 3 to 255', trigger: 'blur' },
+  ],
+})
+
 export const productFormValidationRules = reactive<FormRules>({
   name: [
     { required: true, message: 'Please input Activity name', trigger: 'blur' },

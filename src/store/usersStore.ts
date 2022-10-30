@@ -2,7 +2,7 @@ import { UploadProps, UploadRawFile } from "element-plus";
 import { reactive, computed } from "vue";
 import { PaginationMetaContract } from "../@types";
 import Role from "../entities/Role";
-import User from "../entities/User";
+import User from "../entities/Client";
 
 
 interface UsersStoreStateContract {

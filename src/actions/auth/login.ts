@@ -17,7 +17,7 @@ export default async function login({email, password}: LoginPayloadContract): Pr
             if(response.status) throw response;
             const {token, user} = response;
             localStorage.setItem('cactus-token', token);
-            appStore.setLoggedUser(user);
+            appStore.loggedUser.set(user)
             Http.setJwtToken();
             router.push('/');
             resolve();

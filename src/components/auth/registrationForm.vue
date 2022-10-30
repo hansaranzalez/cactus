@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ElMessage, FormInstance } from 'element-plus';
 import { ref } from 'vue';
-import User from '../../entities/User';
+import User from '../../entities/Client';
 import appStore from '../../store/appStore';
 import {registrationFormValidationRules} from '../../assets/formRules';
 import registerUser from '../../actions/auth/registerUser';

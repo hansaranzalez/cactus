@@ -5,6 +5,7 @@ import Register from './views/auth/Registration.vue';
 import Products from './views/products/Products.vue';
 import Users from './views/users/Users.vue';
 import Roles from './views/roles/Roles.vue';
+import ShoppingSessions from './views/shoppingSessions/shoppingSessions.vue';
 
 const routes = [
   { path: '/', component: Home, meta: { requiresAuth: true } },
@@ -12,6 +13,7 @@ const routes = [
   { path: '/registration', component: Register },
   { path: '/products', component: Products, meta: { requiresAuth: true } },
   { path: '/users', component: Users, meta: { requiresAuth: true } },
+  { path: '/shopping-sessions', component: ShoppingSessions, meta: { requiresAuth: true } },
   { path: '/roles', component: Roles, meta: { requiresAuth: true } },
 ]
 

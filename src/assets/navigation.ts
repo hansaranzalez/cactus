@@ -8,6 +8,7 @@ interface NavigationItemContract {
     icon: string;
     onClick: () => void;
     forAdmin: boolean;
+    inRouterPath: () => boolean;
 }
 
 
@@ -18,6 +19,7 @@ export default reactive<NavigationItemContract[]>([
         icon: 'apps',
         onClick: () => router.push('/products'),
         forAdmin: false,
+        inRouterPath: () => router.currentRoute.value.path === '/products'
     },
     {
         id: 2,
@@ -25,6 +27,7 @@ export default reactive<NavigationItemContract[]>([
         icon: 'apps',
         onClick: () => router.push('/users'),
         forAdmin: true,
+        inRouterPath: () => router.currentRoute.value.path === '/users'
     },
     {
         id: 3,
@@ -32,5 +35,14 @@ export default reactive<NavigationItemContract[]>([
         icon: 'apps',
         onClick: () => router.push('/roles'),
         forAdmin: true,
+        inRouterPath: () => router.currentRoute.value.path === '/roles'
+    },
+    {
+        id: 3,
+        name: 'Orders',
+        icon: 'apps',
+        onClick: () => router.push('/shopping-sessions'),
+        forAdmin: true,
+        inRouterPath: () => router.currentRoute.value.path === '/shopping-sessions'
     },
 ]);

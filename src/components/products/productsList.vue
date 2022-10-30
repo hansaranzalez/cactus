@@ -39,7 +39,7 @@ const tableColumns = ref([
 
 const editProduct = (product: Product): void => {
   ProductsStore.setProductFormPayload(JSON.parse(JSON.stringify(product)));
-  ProductsStore.setIsEditing(true);
+  ProductsStore.setProductsFormEdit(true);
   ProductsStore.showProductsForm();
 };
 
@@ -67,7 +67,7 @@ onMounted(async () => await getProductsList());
 <template>
   <div
     class="mx-auto shadow-lg bg-white rounded-lg overflow-hidden"
-    :style="{ width: '850px' }"
+    :style="{ width: '1250px' }"
   >
     <el-table v-loading="ProductsStore.getProductsListLoading()" :data="ProductsStore.getProductsList()">
       <el-table-column
@@ -87,7 +87,7 @@ onMounted(async () => await getProductsList());
           ></el-image>
         </template>
       </el-table-column>
-      <el-table-column width="250px">
+      <el-table-column width="650px">
         <template #header>
           <div class="flex space-x-3">
             <div>
@@ -102,7 +102,13 @@ onMounted(async () => await getProductsList());
                 type="primary"
                 size="default"
                 @click="ProductsStore.showProductsForm()"
-                >Create</el-button
+                >Add product</el-button
+              >
+              <el-button
+                type="primary"
+                size="default"
+                @click="ProductsStore.showCategoriesForm()"
+                >Add category</el-button
               >
             </div>
           </div>

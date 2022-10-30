@@ -5,7 +5,7 @@ import { RoleType } from "../../@types";
 import getRolesList from "../../actions/roles/getRolesList";
 import assosiateRole from "../../actions/users/associateRole";
 import getUsersList from "../../actions/users/getUsersList";
-import User from "../../entities/User";
+import Client from "../../entities/Client";
 import Store from "../../store/appStore";
 import UsersStore from "../../store/usersStore";
 import UsersForm from "./userForm.vue";
@@ -32,7 +32,7 @@ const tableColumns = ref([
   },
 ]);
 
-const editUser = (user: User): void => {
+const editUser = (user: Client): void => {
   UsersStore.setUser(JSON.parse(JSON.stringify(user)));
   UsersStore.setIsEditing(true);
   UsersStore.showUsersForm();
@@ -54,7 +54,7 @@ const search = computed({
   },
 });
 
-const setRole = (event: boolean, role: RoleType, user: User): void => {
+const setRole = (event: boolean, role: RoleType, user: Client): void => {
   ElMessageBox.confirm("user role change?", "Warning", {
     confirmButtonText: "OK",
     cancelButtonText: "Cancel",

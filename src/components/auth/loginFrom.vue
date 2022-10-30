@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import appStore from '../../store/appStore'
-import User from '../../entities/User'
+import User from '../../entities/Client'
 import {loginFormValidationRules} from '../../assets/formRules'
 import login from '../../actions/auth/login';
 import { ref } from 'vue';

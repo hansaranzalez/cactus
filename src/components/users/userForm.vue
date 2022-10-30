@@ -3,7 +3,7 @@ import deleteUser from "../../actions/users/deleteUser";
 import { computed, onUnmounted, ref, watch } from "vue";
 import getUsersList from "../../actions/users/getUsersList";
 import updateOrCreateUser from "../../actions/users/updateOrCreateUser";
-import User from "../../entities/User";
+import User from "../../entities/Client";
 import UsersStore from "../../store/usersStore";
 import { userFormValidationRules } from "../../assets/formRules";
 import deleteUserAvatar from "../../actions/users/deleteUserAvatar";

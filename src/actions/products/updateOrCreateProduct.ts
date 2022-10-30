@@ -14,6 +14,7 @@ export default async function updateOrCreateProduct(product: Product, id?: numbe
                     price: product.price,
                     description: product.description,
                     in_stock: product.in_stock,
+                    category: product.category,
                 }
             );
             if (response.status !== 200) throw new Error(response.message);
@@ -27,6 +28,7 @@ export default async function updateOrCreateProduct(product: Product, id?: numbe
             price: product.price,
             description: product.description,
             in_stock: product.in_stock,
+            category: product.category,
         });
         if (response.status !== 200) throw new Error(response.message);
         if (!response.data.id) throw new Error("Product procesing error");

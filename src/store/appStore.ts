@@ -17,8 +17,10 @@ const state = reactive<StateContract>({
 });
 
 const Store = () => ({
-    getLoggedUser: computed(() => state.loggedUser),
-    setLoggedUser: (user: User) => state.loggedUser = user,
+    loggedUser: {
+        get: () => state.loggedUser,
+        set: (user: User) => { state.loggedUser = new User(user); }
+    },
     setLocale: (locale: I18nType): void => { state.i18n.locale = locale },
     i18n: computed(() => state.i18n.content[state.i18n.locale]).value
 })
