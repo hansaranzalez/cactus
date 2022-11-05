@@ -6,82 +6,7 @@ html {
   @apply bg-green-50
 }
 
-.base-btn {
-  @apply text-white px-6 py-2 rounded font-medium mx-3 transition duration-200 ease-in-out;
-}
 
-.primary-btn {
-  @apply bg-blue-500 hover:bg-blue-600 base-btn;
-}
-.text-btn {
-  @apply bg-transparent hover:text-blue-600 hover:underline text-black p-0 base-btn !important;
-}
-.secondary-btn {
-  @apply bg-gray-500 hover:bg-gray-600 base-btn;
-}
-.success-btn {
-  @apply bg-green-500 hover:bg-green-600 base-btn;
-}
-.info-btn {
-  @apply bg-green-600 hover:bg-green-700 base-btn;
-}
-.warning-btn {
-  @apply bg-yellow-500 hover:bg-yellow-600 base-btn;
-}
-.danger-btn {
-  @apply bg-red-500 hover:bg-red-600 base-btn;
-}
-.dark-btn {
-  @apply bg-gray-700 hover:bg-gray-800 base-btn;
-}
-
-.base-input { 
-    @apply border h-7 rounded w-full p-3 outline-1;
-}
-
-.primary-input {
-    @apply bg-blue-50 border-blue-300 base-input outline-blue-300 focus:border-blue-400;
-}
-.secondary-input {
-    @apply bg-gray-50 border-gray-300 base-input outline-gray-300 focus:border-gray-400;
-}
-.success-input {
-    @apply bg-green-50 border-green-300 base-input outline-green-300 focus:border-green-400;
-}
-.info-input {
-    @apply bg-green-100 border-green-400 base-input outline-green-300 focus:border-green-400;
-}
-.warning-input {
-    @apply bg-yellow-50 border-yellow-300 base-input outline-yellow-300 focus:border-yellow-400;
-}
-.danger-input {
-    @apply bg-red-50 border-red-300 base-input outline-red-300 focus:border-red-400;
-}
-.dark-input {
-    @apply bg-gray-300 border-gray-500 base-input outline-gray-600 focus:border-gray-400;
-}
-
-.title-1 {
-  @apply text-lg font-semibold py-2;
-}
-
-
-.base-toast {
-  @apply max-w-xs text-sm text-white rounded-md shadow-lg fixed left-0 right-0 mr-auto ml-auto mt-2 z-50;
-}
-
-.success-toast {
-  @apply bg-green-500 base-toast;
-}
-.warning-toast {
-  @apply bg-yellow-500 base-toast;
-}
-.danger-toast {
-  @apply bg-red-500 base-toast;
-}
-.info-toast {
-  @apply bg-gray-500 base-toast;
-}
 
 
 
@@ -112,4 +37,11 @@ html {
   100% {
     transform: scale(1);
   }
+}
+
+
+
+/* ELEMENT UI */
+.el-input--large .el-input__inner {
+  @apply h-12 text-base;
 }

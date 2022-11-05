@@ -3,6 +3,7 @@ import { computed } from "vue";
 import facebookSdk from "./actions/Facebook/facebookSdk";
 import shareInstagramPost from "./actions/Facebook/shareInstagramPost";
 import headerBar from "./components/core/headerBar.vue";
+import authStore from "./store/authStore";
 
 const postCaption = computed({
   get: () => facebookSdk.postCaption.get(),
@@ -16,48 +17,14 @@ const postImage = computed({
 </script>
 
 <template>
-  <!-- login to facebook button -->
-  <div>
-    <el-button
-      v-if="!facebookSdk.facebookUserAccessToken.get()"
-      type="primary"
-      size="default"
-      @click="facebookSdk.login"
-      >Entrar a facebook</el-button
-    >
-    <el-button v-else type="primary" size="default" @click="facebookSdk.logout"
-      >Salir de facebook</el-button
-    >
-  </div>
-  <!-- intagram post from-->
-  <div>
-    <h1>Envia post</h1>
-    <!-- image url input -->
-    <el-input
-      v-model="postImage"
-      placeholder="url de la imagen"
-    ></el-input>
-
-    <el-input
-      type="text"
-      :rows="2"
-      v-model="postCaption"
-      placeholder="Escriba post para instagram"
-      :maxlength="-1"
-      :show-word-limit="false"
-      :autosize="{ minRows: 2, maxRows: 4 }"
-    >
-    </el-input>
-
-    <el-button type="primary" @click="shareInstagramPost"
-      >Enviar post</el-button
-    >
-  </div>
-
-  <!-- <headerBar />
+  <headerBar />
   <div class="pt-32">
     <router-view></router-view>
-  </div> -->
+  </div>
+  <!-- footer -->
+  <div v-if="!authStore.loggedUser.get()" class="w-full py-3 text-center text-gray-400 bg-gray-50 border-t border-gray-100 absolute bottom-0 left-0 right-0">
+    <p>FLOROFILA</p>
+  </div>
 </template>
 
 <style scoped></style>

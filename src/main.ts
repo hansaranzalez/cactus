@@ -6,13 +6,15 @@ import App from './App.vue'
 import Http from './Http'
 import initFacebookSdk from './actions/Facebook/initFacebookSdk';
 import facebookSdk from './actions/Facebook/facebookSdk'
+import authStore from './store/authStore'
 
 
 
-initFacebookSdk().then(() => {
+initFacebookSdk().then(async () => {
     facebookSdk.initialized.set(true);
     const app = createApp(App)
     app.use(router);
-    app.mount('#app')
+    app.mount('#app');
     Http.setJwtToken();
+    await authStore.authCheck();
 });

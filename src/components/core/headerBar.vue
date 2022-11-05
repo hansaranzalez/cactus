@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import logout from '../../actions/auth/logout';
-import appStore from '../../store/appStore';
 import navigation from "../../assets/navigation";
-const loggedUser = computed(() => appStore.loggedUser.get());
+import authStore from '../../store/authStore';
+const loggedUser = computed(() => authStore.loggedUser.get());
 
 </script>
 
@@ -22,7 +21,7 @@ const loggedUser = computed(() => appStore.loggedUser.get());
                     <el-popover placement="bottom" :width="400" trigger="click">
                         <!-- profile menu items -->
                         <div>
-                            <el-button v-if="loggedUser" type="text" @click="logout">Logout</el-button>
+                            <el-button v-if="loggedUser" type="text" @click="authStore.logout()">Logout</el-button>
                             <el-button v-else type="text" @click="$router.push('/login')">Login</el-button>
                         </div>
                         <template #reference>

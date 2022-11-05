@@ -6,6 +6,7 @@ import Products from './views/products/Products.vue';
 import Users from './views/users/Users.vue';
 import Roles from './views/roles/Roles.vue';
 import ShoppingSessions from './views/shoppingSessions/shoppingSessions.vue';
+import authStore from './store/authStore';
 
 const routes = [
   { path: '/', component: Home, meta: { requiresAuth: true } },
@@ -23,8 +24,8 @@ const router = createRouter({
 });
 
 
-router.beforeEach((to, from, next) => {
-  const isUserAuthenticated = localStorage.getItem('cactus-token');
+router.beforeEach(async (to, from, next) => {
+  const isUserAuthenticated = localStorage.getItem('cactus-token') && localStorage.getItem('cactus-user');
   let authrequired = false
   if (to && to.meta && to.meta.requiresAuth) authrequired = true
   if (authrequired) {

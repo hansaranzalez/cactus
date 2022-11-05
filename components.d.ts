@@ -8,10 +8,13 @@ export {}
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     BaseTable: typeof import('./src/components/core/baseTable.vue')['default']
+    Categories: typeof import('./src/components/categories/index.vue')['default']
     CategoryForm: typeof import('./src/components/products/categoryForm.vue')['default']
+    ElAlert: typeof import('element-plus/es')['ElAlert']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElDialog: typeof import('element-plus/es')['ElDialog']
+    ElDivider: typeof import('element-plus/es')['ElDivider']
     ElForm: typeof import('element-plus/es')['ElForm']
     ElFormItem: typeof import('element-plus/es')['ElFormItem']
     ElIcon: typeof import('element-plus/es')['ElIcon']
