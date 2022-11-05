@@ -29,7 +29,6 @@ function Http(): HttpContract {
             return await response.json();
         } catch (error: any) {
             if (error.status === 401 || error.status === 403) {
-                logout();
                 return;
             }
             return await error.json();
@@ -50,7 +49,6 @@ function Http(): HttpContract {
             return await response.json()
         } catch (error: any) {
             if (error.status === 401 || error.status === 403) {
-                logout();
                 return;
             }
             return await error.json();
@@ -71,7 +69,6 @@ function Http(): HttpContract {
             return await response.json();
         } catch (error: any) {
             if (error.status === 401 || error.status === 403) {
-                logout();
                 return;
             }
             return await error.json();
@@ -89,7 +86,6 @@ function Http(): HttpContract {
             return await response.json();
         } catch (error: any) {
             if (error.status === 401 || error.status === 403) {
-                logout();
                 return;
             }
             return await error.json();

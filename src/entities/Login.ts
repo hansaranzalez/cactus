@@ -40,6 +40,7 @@ export class Login {
     }
 
     logout() {
+        console.log('booooom')
         localStorage.removeItem('cactus-token');
         localStorage.removeItem('cactus-user');
         router.push('/login');
@@ -55,8 +56,6 @@ export class Login {
             this.loading = false;
             return true;
         } catch (error: any) {
-            this.logout();
-            router.push('/login');
             return false;
         }
     }

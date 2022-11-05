@@ -37,6 +37,7 @@ declare module '@vue/runtime-core' {
     LoginFrom: typeof import('./src/components/auth/loginFrom.vue')['default']
     Modal: typeof import('./src/components/core/modal.vue')['default']
     Navigation: typeof import('./src/components/core/navigation.vue')['default']
+    NewRegistrationVerificationCode: typeof import('./src/components/auth/newRegistrationVerificationCode.vue')['default']
     OrderComponent: typeof import('./src/components/shoppingSessions/orderComponent.vue')['default']
     OrderItemComponent: typeof import('./src/components/shoppingSessions/orderItemComponent.vue')['default']
     OrdersComponent: typeof import('./src/components/shoppingSessions/ordersComponent.vue')['default']

@@ -12,6 +12,13 @@ export const categoriesFormValidationRules = reactive<FormRules>({
   ],
 })
 
+export const verificationCodeFormValidationRules = reactive<FormRules>({
+  code: [
+    { required: true, message: 'Verification code required', trigger: 'blur' },
+    { min: 6, max: 6, message: 'Length should be 6', trigger: 'blur' },
+  ],
+})
+
 export const productFormValidationRules = reactive<FormRules>({
   name: [
     { required: true, message: 'Please input Activity name', trigger: 'blur' },
