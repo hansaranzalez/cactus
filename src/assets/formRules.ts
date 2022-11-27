@@ -21,9 +21,9 @@ export const verificationCodeFormValidationRules = reactive<FormRules>({
 
 export const productFormValidationRules = reactive<FormRules>({
   name: [
-    { required: true, message: 'Please input Activity name', trigger: 'blur' },
+    { required: true, message: 'Campo requerido', trigger: 'blur' },
   ],
-  description: [{ required: true, message: 'Please input activity form', trigger: 'blur' }],
+  description: [{ required: true, message: 'Campo requerido', trigger: 'blur' }],
   price: [
     {
       required: true,
@@ -31,13 +31,18 @@ export const productFormValidationRules = reactive<FormRules>({
       trigger: 'blur',
     },
   ],
-  in_stok: [
+  quantity: [
     {
-      type: 'number',
-      message: 'Numbers only please',
+      required: true,
+      message: 'A price is required to create a product',
       trigger: 'blur',
     },
   ],
+  cost_per_unit: [{
+    required: true,
+    message: 'A price is required to create a product',
+    trigger: 'blur',
+  },]
 })
 
 export const userFormValidationRules = reactive<FormRules>({

@@ -40,7 +40,6 @@ export class Login {
     }
 
     logout() {
-        console.log('booooom')
         localStorage.removeItem('cactus-token');
         localStorage.removeItem('cactus-user');
         router.push('/login');

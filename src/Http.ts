@@ -5,6 +5,7 @@ export interface HttpContract {
     post: (route: string, body: any) => any;
     patch: (route: string, body: any) => any;
     del: (route: string) => any;
+    uploadFiles: (route: string, files: File[]) => any;
     setJwtToken: () => void;
 }
 
@@ -97,6 +98,23 @@ function Http(): HttpContract {
         if (token) headers['Authorization'] = `Bearer ${token}`;
     }
 
+    function uploadFiles(route: string, files: File[]): Promise<any> {
+        const formData = new FormData();
+        files.forEach((file) => {
+            formData.append('images', file);
+        });
+        const api = `${baseUrl}:${port}/${apiVersion}/${route}`;
+        return fetch(api, {
+            method: 'post',
+            body: formData,
+            headers: new Headers({
+                'Authorization': `Bearer ${localStorage.getItem('cactus-token')}`,
+                contentType: 'multipart/form-data'
+            })
+        })
+
+    }
+
 
     return {
         get,
@@ -104,6 +122,7 @@ function Http(): HttpContract {
         patch,
         del,
         setJwtToken,
+        uploadFiles,
     }
 }
 

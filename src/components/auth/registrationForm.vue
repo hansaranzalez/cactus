@@ -25,7 +25,7 @@ function onSubmit(): void {
     show-icon
   />
   <el-alert
-    v-if="authStore.registrationFailMessage()"
+    v-if="authStore.registrationSuccessMessage()"
     title="EXITO!"
     type="success"
     :description="authStore.registrationSuccessMessage()"

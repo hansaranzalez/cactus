@@ -1,7 +1,7 @@
 import { reactive, computed } from "vue";
 import { PaginationMetaContract } from "../@types";
 import Category from "../entities/Category";
-import Product from "../entities/Product";
+import Product, { ImagesContract } from "../entities/Product";
 
 
 interface StateContract {
@@ -37,9 +37,11 @@ const state = reactive<StateContract>({
 });
 
 const ProductsStore = () => ({
-    showProductsForm: () => { state.productsFormVisible = true },
-    hideProductsForm: () => { state.productsFormVisible = false },
-    productsFormVisible: () => state.productsFormVisible,
+
+    productFormVisible: {
+        get: () => state.productsFormVisible,
+        set: (value: boolean) => state.productsFormVisible = value,
+    },
     getProductsListLoading: (): boolean => state.productsListLoading,
     setProductsListLoading: (value: boolean): void => { state.productsListLoading = value },
     setPaginationCurrentPage: (page: number): void => { state.paginationMeta.currentPage = page },
@@ -48,7 +50,38 @@ const ProductsStore = () => ({
     getSearchQuery: (): string => state.search,
     setSearchQuery: (search: string): void => { state.search = search },
     getProductFormPayload: (): Product => state.productFormPayload,
+    getProductFormPayloadImages: (): ImagesContract[] => {
+        // sort by order
+        return state.productFormPayload.images.sort((a, b) => a.order - b.order);
+    },
+    addProductFormPayloadImage: (image: ImagesContract, imageSpotId: number): void => {
+        // find and replace image
+        const imageSpot = state.productFormPayload.images.find((img) => img.id === imageSpotId);
+        if (imageSpot) {
+            imageSpot.name = image.name;
+            imageSpot.url = image.url;
+        }
+    },
+    setProductFormPayloadImageOrder: (imageId: number, order: number): void => {
+        // find and replace image
+        const image = state.productFormPayload.images.find((img) => img.id === imageId);
+        if (image) {
+            image.order = order;
+        }
+    },
+    swapProductImageOrder(imgAId: number, imgBId: number): void {
+        const images = state.productFormPayload.images;
+        const imgA = images.find(image => image.id === Number(imgAId));
+        const imgB = images.find(image => image.id === Number(imgBId));
+        if (imgA && imgB) {
+            const imgAOrder = imgA.order;
+            imgA.order = imgB.order;
+            imgB.order = imgAOrder;
+        }
+        state.productFormPayload.images = images;
+    },
     setProductFormPayload: (product: Product): void => { state.productFormPayload = product },
+    addProductImage: (image: ImagesContract): void => { state.productFormPayload.images.push(image) },
     productsFormEdit: (): boolean => state.productsFormEditing,
     setProductsFormEdit: (value: boolean): void => { state.productsFormEditing = value },
     getProductsList: (): Product[] => state.productsList,
@@ -73,7 +106,8 @@ const ProductsStore = () => ({
     updateCategoryFromList: (category: Category): void => {
         const index = state.categoriesList.findIndex((cat) => cat.id === category.id);
         state.categoriesList[index] = category;
-    }
+    },
+   
 })
 
 export default computed(() => ProductsStore()).value;

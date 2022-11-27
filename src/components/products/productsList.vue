@@ -40,7 +40,7 @@ const tableColumns = ref([
 const editProduct = (product: Product): void => {
   ProductsStore.setProductFormPayload(JSON.parse(JSON.stringify(product)));
   ProductsStore.setProductsFormEdit(true);
-  ProductsStore.showProductsForm();
+  ProductsStore.productFormVisible.set(true);
 };
 
 // pagination
@@ -101,7 +101,7 @@ onMounted(async () => await getProductsList());
               <el-button
                 type="primary"
                 size="default"
-                @click="ProductsStore.showProductsForm()"
+                @click="$router.push('/product')"
                 >Add product</el-button
               >
               <el-button

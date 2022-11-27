@@ -3,6 +3,7 @@ import Home from './views/Home.vue';
 import Login from './views/auth/Login.vue';
 import Register from './views/auth/Registration.vue';
 import Products from './views/products/Products.vue';
+import Product from './views/products/Product.vue';
 import Users from './views/users/Users.vue';
 import Roles from './views/roles/Roles.vue';
 import RegistrationVerificationCode from './views/auth/RegistrationVerificationCode.vue';
@@ -15,6 +16,7 @@ const routes = [
   { path: '/registration', component: Register },
   { path: '/registration-verification', component: RegistrationVerificationCode },
   { path: '/products', component: Products, meta: { requiresAuth: true } },
+  { path: '/product', component: Product, meta: { requiresAuth: true } },
   { path: '/users', component: Users, meta: { requiresAuth: true } },
   { path: '/shopping-sessions', component: ShoppingSessions, meta: { requiresAuth: true } },
   { path: '/roles', component: Roles, meta: { requiresAuth: true } },

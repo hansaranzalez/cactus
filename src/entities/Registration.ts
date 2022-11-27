@@ -1,4 +1,5 @@
 import Http from "../Http";
+import router from "../router";
 
 export class Registration {
     name: string;
@@ -11,7 +12,8 @@ export class Registration {
     success?: string | null = null;
     verificationCode: number = 0;
     verificationCodeError?: string | null = null;
-    verificationCideLoading?: boolean = false;
+    verificationCodeSuccess?: string | null = null;
+    verificationCodeLoading?: boolean = false;
 
     constructor(registration?: Registration) {
         if (registration) {
@@ -58,20 +60,23 @@ export class Registration {
     async verifyUser(): Promise<void> {
         return new Promise(async (resolve, reject) => {
             try {
-                this.verificationCideLoading = true;
+                this.verificationCodeLoading = true;
                 const response = await Http.post('auth/admin/verify-registration-code', {
                     email: this.email,
                     code: this.verificationCode,
                 });
-                const { token, user } = response;
-                console.log(response)
-                if (response.statusCode === 200) { }
-                console.log(token, user)
-                this.verificationCideLoading = false;
+                if (response.statusCode !== 200) {
+                    console.log(response)
+                    this.verificationCodeError = 'Verification code expired or invalid. Please try again.';
+                    this.verificationCodeLoading = false;
+                    reject(response);
+                }
+                this.verificationCodeSuccess = response.message;
+                this.verificationCodeLoading = false;
                 resolve();
             } catch (error: any) {
                 this.error = error.message;
-                this.verificationCideLoading = false;
+                this.verificationCodeLoading = false;
                 reject(error);
             }
         });

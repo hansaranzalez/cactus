@@ -2,14 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
-html {
-  @apply bg-green-50
+html,
+body {
+  @apply bg-cloud-white-florofila h-full;
 }
-
-
-
-
-
 
 .v-enter-active,
 .v-leave-active {
@@ -39,9 +35,77 @@ html {
   }
 }
 
-
-
 /* ELEMENT UI */
 .el-input--large .el-input__inner {
   @apply h-12 text-base;
 }
+
+.el-dialog {
+  @apply rounded-xl;
+}
+
+.el-input .el-input__wrapper,
+.el-input .el-input__inner {
+  @apply rounded-3xl !important;
+}
+
+.el-textarea__inner {
+  @apply rounded-3xl h-16 !important;
+}
+
+.el-form-item__label, .el-checkbox__label {
+  @apply text-lg uppercase font-bold text-green-florofila !important;
+}
+
+.el-checkbox__inner {
+  @apply w-6 h-6  border-transparent !important;
+}
+
+.el-checkbox__input.is-checked .el-checkbox__inner {
+  @apply bg-green-florofila !important;
+}
+
+.el-checkbox.is-checked .el-checkbox__label {
+  @apply text-green-florofila !important;
+}
+
+.el-checkbox__input .el-checkbox__inner::after {
+  width: 6px;
+  height: 13px;
+  margin-left: 4px;
+  
+}
+
+.el-button {
+  @apply hover:bg-opacity-70 border-0 rounded-3xl text-xl p-6 !important;
+}
+.el-button.el-button--primary {
+  @apply bg-green-florofila hover:bg-opacity-70 !important;
+}
+
+
+/* VUE 3 CAROUSEL */
+.imagesGrid {
+  @apply w-[499px] lg:w-[700px] mx-auto !important;
+}
+.carousel__track {
+  @apply space-x-5  !important;
+}
+
+.carousel__next .carousel__icon,
+.carousel__prev .carousel__icon {
+  @apply fill-green-florofila w-64 h-64;
+}
+
+.carousel__prev,
+.carousel__next {
+  width: 65px !important;
+}
+
+.carousel__next {
+  right: -71px !important;
+}
+.carousel__prev {
+  left: -71px !important;
+}
+
