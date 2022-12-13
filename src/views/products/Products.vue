@@ -4,4 +4,5 @@ import categoryForm from "../../components/products/categoryForm.vue";
 </script>
 <template>
   <productsList />
+  <categoryForm />
 </template>

@@ -3,6 +3,7 @@ import { computed, onMounted, ref } from "vue";
 import Product from "../../entities/Product";
 import ProductsStore from "../../store/productsStore";
 import getProductsList from "../../actions/products/getProductsList";
+import router from "../../router";
 
 const tableColumns = ref([
   {
@@ -38,23 +39,23 @@ const tableColumns = ref([
 ]);
 
 const editProduct = (product: Product): void => {
-  ProductsStore.setProductFormPayload(JSON.parse(JSON.stringify(product)));
-  ProductsStore.setProductsFormEdit(true);
-  ProductsStore.productFormVisible.set(true);
+  ProductsStore.form.set(product);
+  ProductsStore.form.isEditing.set(true);
+  router.push({ name: "Product" });
 };
 
 // pagination
 const setCurrentPage = async (current: number) => {
-  ProductsStore.setPaginationCurrentPage(current);
+  ProductsStore.pagination.currentPage.set(current);
   await getProductsList();
 };
 
 // search query
 const search = computed({
-  get: (): string => ProductsStore.getSearchQuery(),
+  get: (): string => ProductsStore.searchQuery.get(),
   set: (value: string): void => {
-    ProductsStore.setProductsListLoading(true);
-    ProductsStore.setSearchQuery(value);
+    ProductsStore.list.isLoading.set(true);
+    ProductsStore.searchQuery.set(value);
     let tout;
     clearTimeout(tout);
     tout = setTimeout(async () => await getProductsList(), 1000);
@@ -69,7 +70,7 @@ onMounted(async () => await getProductsList());
     class="mx-auto shadow-lg bg-white rounded-lg overflow-hidden"
     :style="{ width: '1250px' }"
   >
-    <el-table v-loading="ProductsStore.getProductsListLoading()" :data="ProductsStore.getProductsList()">
+    <el-table v-loading="ProductsStore.list.isLoading.get()" :data="ProductsStore.list.get()">
       <el-table-column
         v-for="col in tableColumns"
         :prop="col.prop"
@@ -121,8 +122,8 @@ onMounted(async () => await getProductsList());
     <el-pagination
       class="flex items-center justify-center"
       layout="prev, pager, next"
-      :total="ProductsStore.getPaginationMeta().totalItems"
-      :current-page="ProductsStore.getPaginationMeta().currentPage"
+      :total="ProductsStore.pagination.get().totalItems"
+      :current-page="ProductsStore.pagination.get().currentPage"
       @current-change="setCurrentPage"
     />
   </div>

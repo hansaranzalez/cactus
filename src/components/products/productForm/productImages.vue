@@ -1,15 +1,17 @@
 <script lang="ts" setup>
 import { computed, ref } from "vue";
-import ProductsStore from "../../store/productsStore";
+import ProductsStore from "../../../store/productsStore";
 import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
 import "vue3-carousel/dist/carousel.css";
+import { makeUUID } from "../../../Utils/makeTempId";
+import { ProductImage } from "../../../entities/ProductImage";
 
 const dialogImageUrl = ref("");
 const dialogVisible = ref(false);
 const currnetDraggedImage = ref<any>(null);
 const theFile = ref<any>(null);
-const currentUploadImageId = ref<number | null>(null);
 const imagesGrid = ref();
+const selectedImg = ref("");
 
 function dragStart(e: any) {
   currnetDraggedImage.value = e.target;
@@ -28,12 +30,11 @@ function dragEnter(e: any) {
 }
 
 function drop(e: any) {
-  const itemID = e.dataTransfer.getData("id");
-  const it = e.target.id;
-  console.log(itemID, it);
-  ProductsStore.swapProductImageOrder(itemID, it);
+  const imgAId = e.dataTransfer.getData("id");
+  const imgBId = e.target.id;
+  ProductsStore.currentProductImages.reorderImages(imgAId, imgBId);
   e.target.style.opacity = "1";
-  return false;
+  // return false;
 }
 
 function dragEnd(e: any) {
@@ -55,8 +56,8 @@ function onFileUpload(event: any) {
   console.log("Files Uploaded");
 }
 
-function uploadFile(id: number) {
-  currentUploadImageId.value = id;
+function uploadFile(imgId: string) {
+  selectedImg.value = imgId;
   theFile.value.click();
 }
 
@@ -67,18 +68,18 @@ function fileupload(e: any) {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = (e) => {
-      if (!currentUploadImageId.value) return;
-      ProductsStore.addProductFormPayloadImage(
-        {
+      ProductsStore.currentProductImages.add(
+        new ProductImage({
           url: (e as any).target.result as string,
-          id: Math.random(),
+          id: makeUUID(),
           name: file.name,
-          file: file,
-          order: ProductsStore.getProductFormPayload().images.length,
-        },
-        currentUploadImageId.value
+          file,
+          order: ProductsStore.currentProductImages.getLastOrder(),
+          isNew: true,
+        }),
+        selectedImg.value
       );
-      currentUploadImageId.value += 1;
+      selectedImg.value = "";
     };
   }
 }
@@ -94,9 +95,9 @@ function fileupload(e: any) {
     >
       <slide
         draggable="true"
-        :id="String(image.id)"
-        v-for="(image, index) in ProductsStore.getProductFormPayloadImages()"
-        :key="index"
+        :id="image.id"
+        v-for="(image, index) in ProductsStore.currentProductImages.get()"
+        :key="image.order"
         @dragstart="dragStart"
         @dragover="dragOver"
         @dragleave="dragLeave"
@@ -105,10 +106,10 @@ function fileupload(e: any) {
         @dragend="dragEnd"
         @click="uploadFile(image.id)"
         :style="{
-            backgroundImage: `url(${image.url})`,
-            width: '208px !important',
-            height: '208px !important',
-          }"
+          backgroundImage: `url(${image.url})`,
+          width: '208px !important',
+          height: '208px !important',
+        }"
         class="bg-gray-200 flex justify-center h-52 w-52 flex-shrink-0 items-center rounded-xl bg-cover bg-center overflow-hidden"
       >
       </slide>
@@ -130,6 +131,4 @@ function fileupload(e: any) {
     <img w-full :src="dialogImageUrl" alt="Preview Image" />
   </el-dialog>
 </template>
-<style>
-
-</style>
+<style></style>

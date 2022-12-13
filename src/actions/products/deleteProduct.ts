@@ -8,7 +8,7 @@ export default async function deleteProduct(product: Product): Promise<any> {
         if (!product.id) throw new Error('Product id is null')
         const response = await Http.del(`products/${product.id}`);
         if (response.status !== 200) throw new Error(response.message);
-        ProductsStore.removeProductFromList(product.id)
+        ProductsStore.list.removeProduct(product.id)
         ElMessage.success(response.message);
     } catch (error: any) {
         ElMessage.error(error.message);

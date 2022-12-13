@@ -15,6 +15,5 @@ initFacebookSdk().then(async () => {
     const app = createApp(App)
     app.use(router);
     app.mount('#app');
-    Http.setJwtToken();
     await authStore.authCheck();
 });

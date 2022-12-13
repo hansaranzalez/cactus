@@ -1,21 +1,20 @@
 import { ElMessage } from "element-plus";
 import Http from "../../Http";
-import Store from "../../store/appStore";
 import ProductsStore from "../../store/productsStore";
 
 export default async function getProductsList(): Promise<void> {
-    ProductsStore.setProductsListLoading(true)
+    ProductsStore.list.isLoading.set(true)
     try {
-        const page = ProductsStore.getPaginationMeta().currentPage;
-        const limit = ProductsStore.getPaginationMeta().itemsPerPage;
-        const search = ProductsStore.getSearchQuery();
+        const page = ProductsStore.pagination.currentPage.get();
+        const limit = ProductsStore.pagination.get().itemsPerPage;
+        const search = ProductsStore.searchQuery.get();
         const response = await Http.get(`products?page=${page}&limit=${limit}&search=${search}`);
-        ProductsStore.setProductsList(response.items);
-        ProductsStore.setPaginationMeta(response.meta);
-        ProductsStore.setProductsListLoading(false)
+        ProductsStore.list.set(response.items);
+        ProductsStore.pagination.set(response.meta);
+        ProductsStore.list.isLoading.set(false)
     } catch (error: any) {
         ElMessage.error(error.message);
-        ProductsStore.setProductsListLoading(false)
+        ProductsStore.list.isLoading.set(false)
     }
     
 }

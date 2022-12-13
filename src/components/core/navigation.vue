@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import navigation from "../../assets/navigation";
-import appStore from "../../store/appStore";
+import usersStore from "../../store/usersStore";
 import logout from "../../actions/auth/logout";
 </script>
 <template>
@@ -14,9 +14,9 @@ import logout from "../../actions/auth/logout";
     >
       <div
         v-if="
-          (appStore.getLoggedUser.value &&
+          (usersStore.getUser() &&
             card.forAdmin &&
-            appStore.getLoggedUser.value?.role.name === 'ADMIN') ||
+            usersStore.getUser().role.name === 'ADMIN') ||
           !card.forAdmin
         "
         class="bg-white rounded-lg shadow-lg p-4"

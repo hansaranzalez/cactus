@@ -31,18 +31,12 @@ export const productFormValidationRules = reactive<FormRules>({
       trigger: 'blur',
     },
   ],
-  quantity: [
-    {
-      required: true,
-      message: 'A price is required to create a product',
-      trigger: 'blur',
-    },
-  ],
   cost_per_unit: [{
     required: true,
     message: 'A price is required to create a product',
     trigger: 'blur',
-  },]
+  },
+]
 })
 
 export const userFormValidationRules = reactive<FormRules>({

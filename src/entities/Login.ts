@@ -22,6 +22,7 @@ export class Login {
                 const response = await Http.post('auth/admin/login', {email: this.email, password: this.password});
                 if(response.status) throw response;
                 const {token, user} = response;
+                console.log(user)
                 localStorage.setItem('cactus-token', token);
                 localStorage.setItem('cactus-user', JSON.stringify(user));
                 authStore.loggedUser.set(user)
@@ -48,6 +49,8 @@ export class Login {
     async authCheck(): Promise<boolean> {
         try {
             const result = await Http.get('auth/auth-check');
+            console.log('authCheck', result);
+            console.log(result)
             if (!result || result.statusCode) throw result;
             localStorage.setItem('cactus-user', JSON.stringify(result));
             authStore.loggedUser.set(result)
@@ -55,6 +58,10 @@ export class Login {
             this.loading = false;
             return true;
         } catch (error: any) {
+            console.log(error)
+            if (error.statusCode === 401) {
+                this.logout();
+            }
             return false;
         }
     }

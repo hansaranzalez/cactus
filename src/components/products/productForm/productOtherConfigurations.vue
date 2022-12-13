@@ -1,13 +1,13 @@
 <script lang="ts" setup>
-import productsStore from "../../store/productsStore";
+import productsStore from "../../../store/productsStore";
 </script>
 
 <template>
-  <div class=" p-5 flex space-x-8">
+  <div class="flex space-x-8">
     <el-form-item prop="category">
       <el-select
         :loading="!productsStore.areCategoriesLoaded"
-        v-model="productsStore.getProductFormPayload().category"
+        v-model="productsStore.form.get().category"
         value-key="id"
         placeholder="Por favor seleccione una categoria"
         clearable
@@ -16,16 +16,16 @@ import productsStore from "../../store/productsStore";
       >
         <el-option
           v-for="(category, index) in productsStore.getCategoriesList()"
-          :key="index"
+          :key="category"
           :label="category.name"
-          :value="category"
+          :value="category.id"
         >
         </el-option>
       </el-select>
     </el-form-item>
     <el-form-item prop="visible">
       <el-checkbox
-        v-model="productsStore.getProductFormPayload().visible"
+        v-model="productsStore.form.get().visible"
         label=""
         :indeterminate="false"
         @change=""

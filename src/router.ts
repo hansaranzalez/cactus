@@ -16,7 +16,7 @@ const routes = [
   { path: '/registration', component: Register },
   { path: '/registration-verification', component: RegistrationVerificationCode },
   { path: '/products', component: Products, meta: { requiresAuth: true } },
-  { path: '/product', component: Product, meta: { requiresAuth: true } },
+  { path: '/product', name: 'Product', component: Product, meta: { requiresAuth: true } },
   { path: '/users', component: Users, meta: { requiresAuth: true } },
   { path: '/shopping-sessions', component: ShoppingSessions, meta: { requiresAuth: true } },
   { path: '/roles', component: Roles, meta: { requiresAuth: true } },

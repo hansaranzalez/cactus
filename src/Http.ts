@@ -1,11 +1,13 @@
 import logout from "./actions/auth/logout";
+import authStore from "./store/authStore";
+import b64toBlob from 'b64-to-blob';
 
 export interface HttpContract {
     get: (route: string) => any;
     post: (route: string, body: any) => any;
     patch: (route: string, body: any) => any;
     del: (route: string) => any;
-    uploadFiles: (route: string, files: File[]) => any;
+    uploadFiles: (route: string, formData: FormData) => any;
     setJwtToken: () => void;
 }
 
@@ -30,7 +32,7 @@ function Http(): HttpContract {
             return await response.json();
         } catch (error: any) {
             if (error.status === 401 || error.status === 403) {
-                return;
+                return logout();
             }
             return await error.json();
         }
@@ -98,11 +100,8 @@ function Http(): HttpContract {
         if (token) headers['Authorization'] = `Bearer ${token}`;
     }
 
-    function uploadFiles(route: string, files: File[]): Promise<any> {
-        const formData = new FormData();
-        files.forEach((file) => {
-            formData.append('images', file);
-        });
+    function uploadFiles(route: string, formData: FormData): Promise<any> {
+       
         const api = `${baseUrl}:${port}/${apiVersion}/${route}`;
         return fetch(api, {
             method: 'post',
@@ -127,3 +126,12 @@ function Http(): HttpContract {
 }
 
 export default Http();
+
+
+function DataURIToBlob(dataURI: string) {
+    const data = dataURI.split(',')[1];
+    const binaryData = atob(data);
+  
+    return new Blob([binaryData], { type: 'image/png' })
+  }
+  

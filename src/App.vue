@@ -26,7 +26,7 @@ const postImage = computed({
       <router-view></router-view>
     </div>
     <div class="p-8">
-      <userProfileVue />
+      <userProfileVue v-if="authStore.loggedUser.get()" />
     </div>
   </div>
 </template>

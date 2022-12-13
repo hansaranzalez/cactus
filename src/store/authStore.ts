@@ -97,7 +97,7 @@ const authStore = computed(() => ({
         }
     },
 
-    isVerifyUserLoading: () => state.registration.verificationCideLoading,
+    isVerifyUserLoading: () => state.registration.verificationCodeLoading,
 
     verifyUserFailMessage: () => state.registration.verificationCodeError,
 

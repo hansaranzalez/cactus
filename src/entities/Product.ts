@@ -1,16 +1,13 @@
+import { makeUUID } from "../Utils/makeTempId";
 import Category from "./Category";
+import { ProductImage } from "./ProductImage";
 
-export interface ImagesContract {
-    id: number;
-    name: string;
-    url: string;
-    file: File;
-    order: number;
-}
+
+
 
 export default class Product {
 
-    public id: number | null;
+    public id: string | null;
     public name: string;
     public description: string;
     public price: number;
@@ -20,7 +17,7 @@ export default class Product {
     public visible: boolean;
     public created_at: string;
     public updated_at: string;
-    public images: ImagesContract[];
+    public images: ProductImage[];
     public category: Category;
 
     constructor(product?: Product) {
@@ -35,7 +32,7 @@ export default class Product {
             this.allow_purchase_when_out_of_stock = product.allow_purchase_when_out_of_stock;
             this.visible = product.visible;
             this.images = productImgs(product.images);
-            this.category = product.category;
+            this.category = new Category(product.category);
             this.created_at = product.created_at;
             this.updated_at = product.updated_at;
         } else {
@@ -60,10 +57,25 @@ export default class Product {
 }
 
 
-function productImgs(images: ImagesContract[]) {
-     // return total of 8 images combine with empty images if needed
-     const emptyImages = Array(8 - images.length).fill({ url: '', name: '' });
-     // add unique id to each image
-     return [...images, ...emptyImages].map((image, index) => ({ ...image, id: index + 1, order: index + 1 }));
-
+function productImgs(images: ProductImage[]) {
+    // return total of 8 images combine with empty images if needed
+    const emptyImages = Array(8 - images.length).fill(new ProductImage());
+    const productImages = images.map(image => (new ProductImage(image)));
+    if (productImages.length > 0) {
+        const empties =  emptyImages.map((image, index) => {
+            const temp = JSON.parse(JSON.stringify(image));
+            temp.id = makeUUID();
+            temp.order = 999999;
+            image = Object.assign({}, temp);
+            return image;
+        });
+        return [...productImages, ...empties].map((image, index) => ({ ...image }));
+    }
+    return  emptyImages.map((image, index) => {
+        const temp = JSON.parse(JSON.stringify(image));
+        temp.id = makeUUID();
+        temp.order = 999999;
+        image = Object.assign({}, temp);
+        return image;
+    });
 }

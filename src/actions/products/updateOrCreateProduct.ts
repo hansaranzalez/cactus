@@ -1,10 +1,10 @@
 import { ElMessage } from "element-plus";
 import Product from "../../entities/Product";
 import Http from "../../Http";
-import Store from "../../store/appStore";
 import ProductsStore from "../../store/productsStore";
+import {updateImagesOrder} from "./updateImagesOrder";
 
-export default async function updateOrCreateProduct(product: Product, id?: number): Promise<any> {
+export default async function updateOrCreateProduct(product: Product, id?: string | null): Promise<any> {
     try {
         if (id) {
             const response = await Http.patch(
@@ -20,7 +20,9 @@ export default async function updateOrCreateProduct(product: Product, id?: numbe
                     visible: product.visible,
                 }
             );
+            await updateImagesOrder();
             if (response.status !== 200) throw new Error(response.message);
+
             ElMessage.success(response.message);
             return;
         }
@@ -39,7 +41,8 @@ export default async function updateOrCreateProduct(product: Product, id?: numbe
             });
         if (response.status !== 200) throw new Error(response.message);
         if (!response.data.id) throw new Error("Product procesing error");
-        ProductsStore.setProductFormPayload(response.data);
+        response.data.images = product.images;
+        ProductsStore.form.set(new Product(response.data));
         ElMessage.success(response.message);
     } catch (error) {
         ElMessage.error((error as any).message);
