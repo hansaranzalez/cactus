@@ -10,7 +10,7 @@ export default async function uploadImages() {
   try {
     // get files from images object and convert to array
     const images = productsStore.currentProductImages.get();
-    const productId = productsStore.form.get().id;
+    const productId = productsStore.product.get().id;
     if (!productId) throw new Error("Product id is not defined");
     const url = `products/${productId}/upload`;
     const filtered = images.filter(img => img.url !== '' && img.isNew)

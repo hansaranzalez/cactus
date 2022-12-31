@@ -12,7 +12,8 @@ export interface HttpContract {
 }
 
 function Http(): HttpContract {
-    const baseUrl = 'http://localhost';
+    const aws = 'http://ec2-18-224-189-140.us-east-2.compute.amazonaws.com';
+    const baseUrl = 'http://localhost'; //
     const port = 3000;
     const apiVersion = 'v1';
     const headers = {
@@ -23,7 +24,7 @@ function Http(): HttpContract {
 
     async function get(route: string): Promise<any> {
         try {
-            const api = `${baseUrl}:${port}/${apiVersion}/${route}`;
+            const api = `${aws}:${port}/${apiVersion}/${route}`;
             const response = await fetch(api, {
                 method: 'get',
                 headers: new Headers(headers)
@@ -40,7 +41,7 @@ function Http(): HttpContract {
 
     async function post(route: string, body: any): Promise<any> {
         try {
-            const api = `${baseUrl}:${port}/${apiVersion}/${route}`;
+            const api = `${aws}:${port}/${apiVersion}/${route}`;
             // stringify body
             body = JSON.stringify(body);
             const response = await fetch(api, {
@@ -60,7 +61,7 @@ function Http(): HttpContract {
 
     async function patch(route: string, body: any): Promise<any> {
         try {
-            const api = `${baseUrl}:${port}/${apiVersion}/${route}`;
+            const api = `${aws}:${port}/${apiVersion}/${route}`;
             // stringify body
             body = JSON.stringify(body);
             const response = await fetch(api, {
@@ -80,7 +81,7 @@ function Http(): HttpContract {
 
     async function del(route: string): Promise<any> {
         try {
-            const api = `${baseUrl}:${port}/${apiVersion}/${route}`;
+            const api = `${aws}:${port}/${apiVersion}/${route}`;
             const response = await fetch(api, {
                 method: 'delete',
                 headers: new Headers(headers)
@@ -102,7 +103,7 @@ function Http(): HttpContract {
 
     function uploadFiles(route: string, formData: FormData): Promise<any> {
        
-        const api = `${baseUrl}:${port}/${apiVersion}/${route}`;
+        const api = `${aws}:${port}/${apiVersion}/${route}`;
         return fetch(api, {
             method: 'post',
             body: formData,

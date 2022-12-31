@@ -61,11 +61,12 @@ function productImgs(images: ProductImage[]) {
     // return total of 8 images combine with empty images if needed
     const emptyImages = Array(8 - images.length).fill(new ProductImage());
     const productImages = images.map(image => (new ProductImage(image)));
+    
     if (productImages.length > 0) {
+        const lastOrder = productImages[productImages.length - 1].order;
         const empties =  emptyImages.map((image, index) => {
             const temp = JSON.parse(JSON.stringify(image));
-            temp.id = makeUUID();
-            temp.order = 999999;
+            temp.order = 99999;
             image = Object.assign({}, temp);
             return image;
         });
@@ -73,8 +74,7 @@ function productImgs(images: ProductImage[]) {
     }
     return  emptyImages.map((image, index) => {
         const temp = JSON.parse(JSON.stringify(image));
-        temp.id = makeUUID();
-        temp.order = 999999;
+        temp.order = 99999;
         image = Object.assign({}, temp);
         return image;
     });

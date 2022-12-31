@@ -42,7 +42,7 @@ export default async function updateOrCreateProduct(product: Product, id?: strin
         if (response.status !== 200) throw new Error(response.message);
         if (!response.data.id) throw new Error("Product procesing error");
         response.data.images = product.images;
-        ProductsStore.form.set(new Product(response.data));
+        ProductsStore.product.set(new Product(response.data));
         ElMessage.success(response.message);
     } catch (error) {
         ElMessage.error((error as any).message);

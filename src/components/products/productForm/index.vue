@@ -13,29 +13,26 @@ import productInventoryVue from "./productInventory.vue";
 import productOtherConfigurationsVue from "./productOtherConfigurations.vue";
 import uploadImages from "../../../actions/products/uploadImages";
 import { ElMessage } from "element-plus";
-
-const dialogVisible = computed({
-  get: (): boolean => ProductsStore.form.visible.get(),
-  set: (value: boolean): void => {
-    ProductsStore.form.visible.set(value);
-  },
-});
+import router from "../../../router";
 
 const productsForm = ref();
-const isEditing = computed(() => ProductsStore.form.isEditing.get());
+const isEditing = computed(() => ProductsStore.product.isEditing.get());
 
 onUnmounted(async () => {
-  ProductsStore.form.set(new Product());
-  ProductsStore.form.isEditing.set(false);
+  ProductsStore.product.set(new Product());
+  ProductsStore.product.isEditing.set(false);
 });
 
 const createOrUpdateProduct = async (): Promise<void> => {uploadImages
   productsForm.value.validate(async (valid: boolean) => {
-    const product = ProductsStore.form.get();
+    const product = ProductsStore.product.get();
     if (valid) {
       await updateOrCreateProduct(product, product.id);
       await uploadImages();
       await getProductsList();
+      if (!isEditing.value) {
+        router.push({ name: "products" });
+      } 
       return;
     }
     ElMessage.error("Por favor revise los campos marcados con asterisco (*)");
@@ -43,9 +40,9 @@ const createOrUpdateProduct = async (): Promise<void> => {uploadImages
 };
 
 const resetForm = (): void => {
-  ProductsStore.form.set(new Product());
-  ProductsStore.form.isEditing.set(false);
-  dialogVisible.value = false;
+  ProductsStore.product.set(new Product());
+  ProductsStore.product.isEditing.set(false);
+  router.push({ name: "products" });
 };
 
 onMounted(async () => {
@@ -56,7 +53,7 @@ onMounted(async () => {
 
 <template>
   <el-form
-    :model="ProductsStore.form.get()"
+    :model="ProductsStore.product.get()"
     ref="productsForm"
     :rules="productFormValidationRules"
     label-width="80px"

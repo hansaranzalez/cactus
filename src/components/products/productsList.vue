@@ -39,8 +39,8 @@ const tableColumns = ref([
 ]);
 
 const editProduct = (product: Product): void => {
-  ProductsStore.form.set(product);
-  ProductsStore.form.isEditing.set(true);
+  ProductsStore.product.set(product);
+  ProductsStore.product.isEditing.set(true);
   router.push({ name: "Product" });
 };
 

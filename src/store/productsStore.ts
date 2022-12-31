@@ -10,7 +10,7 @@ interface StateContract {
     productsFormVisible: boolean;
     productsListLoading: boolean;
     productsFormIsEditing: boolean;
-    productFormPayload: Product,
+    product: Product,
     search: string,
     paginationMeta: PaginationMetaContract,
     categoriesList: Category[],
@@ -23,7 +23,7 @@ const state = reactive<StateContract>({
     productsFormVisible: false,
     productsListLoading: false,
     productsFormIsEditing: false,
-    productFormPayload: new Product(),
+    product: new Product(),
     search: '',
     paginationMeta: {
         totalItems: 0,
@@ -40,7 +40,9 @@ const state = reactive<StateContract>({
 const ProductsStore = () => ({
     list: {
         get: () => state.productsList,
-        set: (value: Product[]) => state.productsList = value.map((product) => new Product(product)),
+        set: (value: Product[]) => {
+            console.log(value)
+            state.productsList = value.map((product) => new Product(product))},
         isLoading: {
             get: () => state.productsListLoading,
             set: (value: boolean) => state.productsListLoading = value,
@@ -61,42 +63,54 @@ const ProductsStore = () => ({
         get: () => state.search,
         set: (value: string) => state.search = value,
     },
-    form: {
-        get: () => state.productFormPayload,
-        set: (value: Product) => state.productFormPayload = value,
+    product: {
+        get: (): Product => {
+            console.log(state.product)
+            return state.product},
+        set: (value: Product) => state.product = value,
         isEditing: {
-            get: () => state.productsFormIsEditing,
+            get: (): boolean => state.productsFormIsEditing,
             set: (value: boolean) => state.productsFormIsEditing = value,
         },
         visible: {
-            get: () => state.productsFormVisible,
+            get: (): boolean => state.productsFormVisible,
             set: (value: boolean) => state.productsFormVisible = value,
-        }
+        },
+        getCategory: () => state.product.category,
     },
     currentProductImages: {
         get: () => {
-            console.log(state.productFormPayload.images)
-            return state.productFormPayload.images.sort((a, b) => a.order - b.order);
+            return state.product.images.sort((a, b) => a.order - b.order);
         },
         setOrder: (imageId: string, order: number) => {
-            // find and replace image
-            console.log(imageId, order)
-            const image = state.productFormPayload.images.find((img) => img.id === imageId);
-            if (image) {
-                image.order = order;
-            }
+            // find image
+            const image = state.product.images.find((img) => String(img.id) === String(imageId));
         },
         add: (image: ProductImage, productImageId?: string) => {
-            // find and replace image with first empty spot
-            if (productImageId && productImageId !== '') {
-                state.productFormPayload.images.splice(state.productsList.findIndex((img) => img.id === productImageId), 1, image);
-                return;
+            // if number of non-empty images is 8, return
+            if (state.product.images.filter((img) => img.name !== '').length === 8) return;
+            if (productImageId) {
+                const foundImg = state.product.images.find((img) => String(img.id) === String(productImageId));
+                if (foundImg) {
+                    const order = foundImg.order;
+                    const index = state.product.images.findIndex((img) => String(img.id) === String(productImageId));
+                    if (index !== -1) {
+                        state.product.images.splice(index, 1, image);
+                        state.product.images[index].order = order;
+                    }
+                }
             }
-            state.productFormPayload.images.splice(state.productsList.findIndex((img) => img.id === ''), 1, image);
+            const emptyImageIndex = state.product.images.findIndex((img) => img.name === '');
+            if (emptyImageIndex !== -1) {
+                state.product.images.splice(emptyImageIndex, 1);
+            }
+            const lastImageOrder = state.product.images.find((img) => img.name !== '')?.order || 0;
+            image.order = (lastImageOrder) ? lastImageOrder + 1 : 0;
+            state.product.images.push(image);
         },
-        numOfImgs: () => state.productFormPayload.images.length,
+        numOfImgs: () => state.product.images.length,
         swapOrder: (imgAId: string, imgBId: string) => {
-            const images = state.productFormPayload.images;
+            const images = state.product.images;
             const imgA = images.find(image => image.id === imgAId);
             const imgB = images.find(image => image.id === imgBId);
             if (imgA && imgB) {
@@ -104,27 +118,47 @@ const ProductsStore = () => ({
                 imgA.order = imgB.order;
                 imgB.order = imgAOrder;
             }
-            state.productFormPayload.images = images;
+            state.product.images = images;
         },
         // reorder images after moving one image to another spot
         reorderImages: (imgAId: string, imgBId: string) => {
-            const images = state.productFormPayload.images;
+            const images = state.product.images;
             const imgA = images.find(image => image.id === imgAId);
             const imgB = images.find(image => image.id === imgBId);
             if (imgA && imgB) {
                 const imgAOrder = imgA.order;
-                imgA.order = imgB.order;
-                imgB.order = imgAOrder;
-                console.log('imgB.order', imgB.order, 'imgA.order', imgA.order)
+                const imgBOrder = imgB.order;
+                const imgAIndex = images.findIndex(image => image.id === imgAId);
+                const imgBIndex = images.findIndex(image => image.id === imgBId);
+                if (imgAIndex !== -1 && imgBIndex !== -1) {
+                    images.splice(imgAIndex, 1, imgB);
+                    images.splice(imgBIndex, 1, imgA);
+                    imgA.order = imgBOrder;
+                    imgB.order = imgAOrder;
+                }
             }
-            state.productFormPayload.images = images;
+            state.product.images = images;
         },
         getLastOrder: () => {
-            const images = state.productFormPayload.images.filter((img) => img.name !== '');
+            const images = state.product.images.filter((img) => img.name !== '');
             const lastImage = images[images.length - 1];
             return lastImage ? lastImage.order + 1 : 0;
         },
-        getImgById: (id: string) => state.productFormPayload.images.find((img) => img.id === id),
+        getImgById: (id: string) => state.product.images.find((img) => img.id === id),
+        delete: (id: string) => {
+            const index = state.product.images.findIndex((img) => img.id === id);
+            console.log(index)
+            if (index !== -1) {
+
+                // add empty image
+                const emptyImg = new ProductImage();
+                emptyImg.order = 99999;
+                state.product.images.push(emptyImg);
+
+                // remove image
+                state.product.images.splice(index, 1);
+            }
+        }
     },
     // categories
     categoriesFormEditing: (): boolean => state.categoriesFormEditing,
@@ -136,8 +170,8 @@ const ProductsStore = () => ({
     showCategoriesForm: () => { state.categoriesFormVisible = true },
     hideCategoriesForm: () => { state.categoriesFormVisible = false },
     categoriesFormVisible: () => state.categoriesFormVisible,
-    setCategorieFormPayload: (category: Category): void => { state.productFormPayload.category = category },
-    getCategorieFormPayload: (): Category => state.productFormPayload.category,
+    setCategorieFormPayload: (category: Category): void => { state.product.category = category },
+    getCategorieFormPayload: (): Category => state.product.category,
     removeCategoryFromList: (id: number): void => { state.categoriesList = state.categoriesList.filter((cat) => cat.id !== id) },
     addCategoryIntoList: (category: Category): void => { state.categoriesList.unshift(category) },
     updateCategoryFromList: (category: Category): void => {

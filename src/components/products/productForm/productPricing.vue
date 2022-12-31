@@ -15,21 +15,21 @@ const convertAndValidatePrice = (price: string): number => {
 };
 const price = computed({
   get: (): string => {
-    const price = productsStore.form.get().price;
+    const price = productsStore.product.get().price;
     console.log(price)
     return convertToCopCurrency(price);
   },
   set: (value: string): void => {
     const price = convertAndValidatePrice(value);
-    productsStore.form.get().price = price;
+    productsStore.product.get().price = price;
   },
 });
 const costPerUnit = computed({
   get: (): string =>
-    convertToCopCurrency(productsStore.form.get().cost_per_unit),
+    convertToCopCurrency(productsStore.product.get().cost_per_unit),
   set: (value: string): void => {
     const price = convertAndValidatePrice(value);
-    productsStore.form.get().cost_per_unit = price;
+    productsStore.product.get().cost_per_unit = price;
   },
 });
 </script>
