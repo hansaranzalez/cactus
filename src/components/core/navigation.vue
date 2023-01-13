@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import navigation from "../../assets/navigation";
 import usersStore from "../../store/usersStore";
-import logout from "../../actions/auth/logout";
 </script>
 <template>
   

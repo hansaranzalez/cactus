@@ -1,32 +1,28 @@
 <script setup lang="ts">
-import { computed } from "vue";
-import facebookSdk from "./actions/Facebook/facebookSdk";
-import shareInstagramPost from "./actions/Facebook/shareInstagramPost";
 import headerBar from "./components/core/headerBar.vue";
 import authStore from "./store/authStore";
 import userProfileVue from "./components/core/userProfile.vue";
-
-const postCaption = computed({
-  get: () => facebookSdk.postCaption.get(),
-  set: (value) => facebookSdk.postCaption.set(value),
+import { onMounted, computed } from "vue";
+onMounted(async () => {
+  await authStore.authCheck();
 });
 
-const postImage = computed({
-  get: () => facebookSdk.intagramPost.get().media_url,
-  set: (value) => facebookSdk.setMediaImageUrl(value),
-});
+const userlogged = computed(() => authStore.loggedUser.get());
 </script>
 
 <template>
-  <div class="flex h-full ">
-    <div class="h-full absolute top-0 left-0 bottom-0 w-80">
-      <headerBar class=""/>
+  <div class="flex h-full">
+    <div v-if="userlogged?.id" class="h-full absolute top-0 left-0 bottom-0 w-80">
+      <headerBar />
     </div>
-    <div class="flex-1 ml-64 p-8 relative overflow-auto rounded-tl-[50px] rounded-bl-[50px] bg-cloud-white-florofila">
-      <router-view></router-view>
+    <div
+      :class="{ 'ml-64': userlogged?.id }"
+      class="flex-1 p-8 relative overflow-auto rounded-tl-[50px] rounded-bl-[50px] bg-cloud-white-florofila"
+    >
+      <router-view />
     </div>
-    <div class="p-8">
-      <userProfileVue v-if="authStore.loggedUser.get()" />
+    <div v-if="userlogged?.id" class="p-8">
+      <userProfileVue />
     </div>
   </div>
 </template>

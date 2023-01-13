@@ -27,6 +27,7 @@ declare module '@vue/runtime-core' {
     ElTable: typeof import('element-plus/es')['ElTable']
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
     ElUpload: typeof import('element-plus/es')['ElUpload']
+    Filters: typeof import('./src/components/products/filters.vue')['default']
     HeaderBar: typeof import('./src/components/core/headerBar.vue')['default']
     LoginFrom: typeof import('./src/components/auth/loginFrom.vue')['default']
     Navigation: typeof import('./src/components/core/navigation.vue')['default']

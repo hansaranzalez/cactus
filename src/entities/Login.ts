@@ -15,54 +15,44 @@ export class Login {
     }
 
     async login(): Promise<void> {
-        return new Promise(async (resolve, reject) => {
-            this.error = null;
-            this.loading = true;
-            try {
-                const response = await Http.post('auth/admin/login', {email: this.email, password: this.password});
-                if(response.status) throw response;
-                const {token, user} = response;
-                console.log(user)
-                localStorage.setItem('cactus-token', token);
-                localStorage.setItem('cactus-user', JSON.stringify(user));
-                authStore.loggedUser.set(user)
-                Http.setJwtToken();
-                this.loading = false;
-                router.push('/');
-                
-                resolve();
-            } catch (error: any) {
-                this.error = error.message;
-                this.logout();
-                this.loading = false;
-                reject(error);
-            }
-        });
+        this.error = null;
+        this.loading = true;
+        try {
+            const response = await Http.post('auth/admin/login', { email: this.email, password: this.password });
+            if (response.status) throw response;
+            const { token, user } = response;
+            localStorage.setItem('cactus-token', token);
+            authStore.loggedUser.set(user)
+            this.loading = false;
+            router.push({ name: 'home' });
+        } catch (error: any) {
+            this.error = error.message;
+            this.logout();
+            this.loading = false;
+            router.push({ name: 'login' });
+        }
     }
 
     logout() {
+        authStore.loggedUser.set(null)
         localStorage.removeItem('cactus-token');
         localStorage.removeItem('cactus-user');
-        router.push('/login');
+        
+        router.push({ name: 'login' });
     }
 
-    async authCheck(): Promise<boolean> {
+    async authCheck(): Promise<void> {
         try {
             const result = await Http.get('auth/auth-check');
-            console.log('authCheck', result);
             console.log(result)
             if (!result || result.statusCode) throw result;
-            localStorage.setItem('cactus-user', JSON.stringify(result));
             authStore.loggedUser.set(result)
-            Http.setJwtToken();
             this.loading = false;
-            return true;
+            router.push({ name: 'home' });
         } catch (error: any) {
-            console.log(error)
-            if (error.statusCode === 401) {
+            if (!error || error.statusCode === 401) {
                 this.logout();
             }
-            return false;
         }
     }
 

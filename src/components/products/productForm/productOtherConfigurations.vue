@@ -26,16 +26,16 @@ const confirmDeleteVisible = ref(false);
         </el-option>
       </el-select>
     </el-form-item>
-    <el-form-item prop="visible">
+    <el-form-item prop="active">
       <el-checkbox
-        v-model="productsStore.product.get().visible"
+        v-model="productsStore.product.get().active"
         label=""
         :indeterminate="false"
         @change=""
-        >Visible</el-checkbox
+        >Activo</el-checkbox
       >
     </el-form-item>
-    <el-form-item prop="visible">
+    <el-form-item>
       <el-popover :visible="confirmDeleteVisible" placement="bottom" :width="160">
         <p>Estas seguro?</p>
         <div style="text-align: right; margin: 0;">

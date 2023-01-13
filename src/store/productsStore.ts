@@ -3,6 +3,7 @@ import { PaginationMetaContract } from "../@types";
 import Category from "../entities/Category";
 import Product from "../entities/Product";
 import { ProductImage } from "../entities/ProductImage";
+import { ProductFilters, ProductStatus } from "../entities/ProductFilters";
 
 
 interface StateContract {
@@ -12,7 +13,7 @@ interface StateContract {
     productsFormIsEditing: boolean;
     product: Product,
     search: string,
-    paginationMeta: PaginationMetaContract,
+    filters: ProductFilters,
     categoriesList: Category[],
     categoriesFormVisible: boolean,
     categoriesFormEditing: boolean,
@@ -25,13 +26,7 @@ const state = reactive<StateContract>({
     productsFormIsEditing: false,
     product: new Product(),
     search: '',
-    paginationMeta: {
-        totalItems: 0,
-        itemCount: 0,
-        itemsPerPage: 10,
-        totalPages: 0,
-        currentPage: 1,
-    },
+    filters: new ProductFilters(),
     categoriesList: [],
     categoriesFormEditing: false,
     categoriesFormVisible: false,
@@ -42,7 +37,8 @@ const ProductsStore = () => ({
         get: () => state.productsList,
         set: (value: Product[]) => {
             console.log(value)
-            state.productsList = value.map((product) => new Product(product))},
+            state.productsList = value.map((product) => new Product(product))
+        },
         isLoading: {
             get: () => state.productsListLoading,
             set: (value: boolean) => state.productsListLoading = value,
@@ -51,22 +47,21 @@ const ProductsStore = () => ({
         removeProduct: (id: string) => state.productsList = state.productsList.filter((product) => product.id !== id),
         getById: (id: string) => state.productsList.find((product) => product.id === id),
     },
-    pagination: {
-        get: () => state.paginationMeta,
-        set: (value: PaginationMetaContract) => state.paginationMeta = value,
-        currentPage: {
-            get: () => state.paginationMeta.currentPage,
-            set: (value: number) => state.paginationMeta.currentPage = value,
-        }
-    },
-    searchQuery: {
-        get: () => state.search,
-        set: (value: string) => state.search = value,
+    filters: {
+        get: () => state.filters,
+        set: (value: ProductFilters) => state.filters = value,
+        sePagination: (value: PaginationMetaContract) => state.filters.pagination = value,
+        setSearchQuery: (value: string) => state.filters.searchQuery = value,
+        setCategory: (value: Category) => state.filters.category = value,
+        setState: (value: ProductFilters['status']) => state.filters.status = value,
+        setPrice: (value: ProductFilters['price']) => state.filters.price = value,
+        setQuantity: (value: ProductFilters['quantity']) => state.filters.quantity = value,
     },
     product: {
         get: (): Product => {
             console.log(state.product)
-            return state.product},
+            return state.product
+        },
         set: (value: Product) => state.product = value,
         isEditing: {
             get: (): boolean => state.productsFormIsEditing,
@@ -80,7 +75,7 @@ const ProductsStore = () => ({
     },
     currentProductImages: {
         get: () => {
-            return state.product.images.sort((a, b) => a.order - b.order);
+            return state.product.images;
         },
         setOrder: (imageId: string, order: number) => {
             // find image
@@ -88,25 +83,20 @@ const ProductsStore = () => ({
         },
         add: (image: ProductImage, productImageId?: string) => {
             // if number of non-empty images is 8, return
-            if (state.product.images.filter((img) => img.name !== '').length === 8) return;
-            if (productImageId) {
-                const foundImg = state.product.images.find((img) => String(img.id) === String(productImageId));
-                if (foundImg) {
-                    const order = foundImg.order;
-                    const index = state.product.images.findIndex((img) => String(img.id) === String(productImageId));
-                    if (index !== -1) {
-                        state.product.images.splice(index, 1, image);
-                        state.product.images[index].order = order;
-                    }
-                }
+            console.log('productImageId', productImageId)
+            const numberOfEmtyImages = state.product.images.filter((img) => img.id === '').length;
+            if (productImageId && productImageId !== '') {
+                const foundImgIndex = state.product.images.findIndex((img) => String(img.id) === String(productImageId));
+                if (foundImgIndex !== -1) state.product.images.splice(foundImgIndex, 1, image);
+                return;
             }
-            const emptyImageIndex = state.product.images.findIndex((img) => img.name === '');
-            if (emptyImageIndex !== -1) {
-                state.product.images.splice(emptyImageIndex, 1);
-            }
-            const lastImageOrder = state.product.images.find((img) => img.name !== '')?.order || 0;
-            image.order = (lastImageOrder) ? lastImageOrder + 1 : 0;
-            state.product.images.push(image);
+            if (numberOfEmtyImages === 0) return;
+            const nonEmptyImages = state.product.images.filter((img) => img.name !== '');
+            const firstEmptyimageIndex = state.product.images.findIndex((img) => img.name === '');
+            const lastImageOrder = nonEmptyImages.length > 0 ? nonEmptyImages.reduce((prev, current) => (prev.order > current.order) ? prev : current).order: 0;
+            console.log('last img order', lastImageOrder)
+            image.order = (lastImageOrder || lastImageOrder === 0) ? lastImageOrder + 1 : 0;
+            state.product.images.splice(firstEmptyimageIndex, 1, image);
         },
         numOfImgs: () => state.product.images.length,
         swapOrder: (imgAId: string, imgBId: string) => {
@@ -137,6 +127,7 @@ const ProductsStore = () => ({
                     imgB.order = imgAOrder;
                 }
             }
+            console.log(images)
             state.product.images = images;
         },
         getLastOrder: () => {

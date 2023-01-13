@@ -17,7 +17,7 @@ export default async function updateOrCreateProduct(product: Product, id?: strin
                     price: product.price,
                     cost_per_unit: product.cost_per_unit,
                     allow_purchase_when_out_of_stock: product.allow_purchase_when_out_of_stock,
-                    visible: product.visible,
+                    active: product.active,
                 }
             );
             await updateImagesOrder();
@@ -37,7 +37,7 @@ export default async function updateOrCreateProduct(product: Product, id?: strin
                 price: product.price,
                 cost_per_unit: product.cost_per_unit,
                 allow_purchase_when_out_of_stock: product.allow_purchase_when_out_of_stock,
-                visible: product.visible,
+                active: product.active,
             });
         if (response.status !== 200) throw new Error(response.message);
         if (!response.data.id) throw new Error("Product procesing error");

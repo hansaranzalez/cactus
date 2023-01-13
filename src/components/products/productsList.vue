@@ -46,16 +46,16 @@ const editProduct = (product: Product): void => {
 
 // pagination
 const setCurrentPage = async (current: number) => {
-  ProductsStore.pagination.currentPage.set(current);
+  ProductsStore.filters.get().pagination.currentPage = current;
   await getProductsList();
 };
 
 // search query
 const search = computed({
-  get: (): string => ProductsStore.searchQuery.get(),
+  get: (): string => ProductsStore.filters.get().searchQuery,
   set: (value: string): void => {
     ProductsStore.list.isLoading.set(true);
-    ProductsStore.searchQuery.set(value);
+    ProductsStore.filters.setSearchQuery(value);
     let tout;
     clearTimeout(tout);
     tout = setTimeout(async () => await getProductsList(), 1000);
@@ -122,8 +122,8 @@ onMounted(async () => await getProductsList());
     <el-pagination
       class="flex items-center justify-center"
       layout="prev, pager, next"
-      :total="ProductsStore.pagination.get().totalItems"
-      :current-page="ProductsStore.pagination.get().currentPage"
+      :total="ProductsStore.filters.get().pagination.totalItems"
+      :current-page="ProductsStore.filters.get().pagination.currentPage"
       @current-change="setCurrentPage"
     />
   </div>

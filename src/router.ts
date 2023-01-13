@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import { RouterLink, createRouter, createWebHistory } from 'vue-router';
 import Home from './views/Home.vue';
 import Login from './views/auth/Login.vue';
 import Register from './views/auth/Registration.vue';
@@ -11,8 +11,8 @@ import ShoppingSessions from './views/shoppingSessions/shoppingSessions.vue';
 import authStore from './store/authStore';
 
 const routes = [
-  { path: '/', component: Home, meta: { requiresAuth: true } },
-  { path: '/login', component: Login },
+  { path: '/', name: 'home', component: Home, meta: { requiresAuth: true } },
+  { path: '/login', name: 'login', component: Login },
   { path: '/registration', component: Register },
   { path: '/registration-verification', component: RegistrationVerificationCode },
   { path: '/products', component: Products, name: 'products', meta: { requiresAuth: true } },
@@ -29,14 +29,13 @@ const router = createRouter({
 
 
 router.beforeEach(async (to, from, next) => {
-  const isUserAuthenticated = localStorage.getItem('cactus-token') && localStorage.getItem('cactus-user');
+  const isUserAuthenticated = localStorage.getItem('cactus-token');
   let authrequired = false
   if (to && to.meta && to.meta.requiresAuth) authrequired = true
-  console.log('authrequired', authrequired)
   if (authrequired) {
     if (isUserAuthenticated) {
       if (to.name === 'login') {
-        router.push('/');
+        router.push({ name: 'home' });
         return false
       } else {
         next()
@@ -44,18 +43,16 @@ router.beforeEach(async (to, from, next) => {
     } else {
       if (to.name !== 'login') {
 
-        router.push('/login');
+        router.push({ name: 'login' });
         return false
       }
       next()
     }
   } else {
     if (isUserAuthenticated && to.name === 'login') {
-      console.log('WHAAAAT!')
-      router.push('/');
+      router.push({ name: 'login' });
       return false
     } else {
-      console.log('YESSS!')
       next()
     }
   }

@@ -19,12 +19,17 @@ const authStore = computed(() => ({
 
     loggedUser: {
         get: () => {
-            if (localStorage.getItem('cactus-user')) {
-                state.loggedUser = new User(JSON.parse(localStorage.getItem('cactus-user') || '{}'));
+            const user = JSON.parse(localStorage.getItem('cactus-user') || '{}');
+            if (user && user.id) state.loggedUser = new User(user);
+            if (!user || !user.id) {
+                state.loggedUser = null;
             }
             return state.loggedUser
         },
-        set: (user: User) => { state.loggedUser = new User(user); }
+        set: (user: User | null) => { 
+            state.loggedUser = user ? new User(user) : null;
+            if (state.loggedUser) localStorage.setItem('cactus-user', JSON.stringify(state.loggedUser));
+        }
     },
 
     loginPayload: {
@@ -37,7 +42,7 @@ const authStore = computed(() => ({
     loginFailMessage: () => state.login.error,
 
     login: async () => {
-        await state.login.login()
+        return await state.login.login();
     },
 
     logout: () => {

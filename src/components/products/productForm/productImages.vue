@@ -40,7 +40,6 @@ function drop(e: any) {
     dragging.value = false;
     return;
   }
-  console.log("imgAId", imgAId, "imgBId", imgBId);
   ProductsStore.currentProductImages.reorderImages(imgAId, imgBId);
   e.target.style.opacity = "1";
   dragging.value = false;
@@ -78,7 +77,6 @@ function fileupload(e: any) {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = (e) => {
-      console.log("selected img", selectedImg.value);
       ProductsStore.currentProductImages.add(
         new ProductImage({
           url: (e as any).target.result as string,

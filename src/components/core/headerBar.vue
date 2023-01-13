@@ -1,12 +1,9 @@
 <script setup lang="ts">
-import { computed } from "vue";
 import navigation from "../../assets/navigation";
-import authStore from "../../store/authStore";
-const loggedUser = computed(() => authStore.loggedUser.get());
 </script>
 
 <template>
-  <div v-if="loggedUser" class="relative h-full">
+  <div class="relative h-full">
     
     <div class="bg-green-florofila h-full pr-16">
       <div class="py-8">
